@@ -4,20 +4,20 @@
   "source": "TC4R build containing https://github.com/xiuyi-ink/thaumcraft-4-reconstructed/pull/415 (8ef9867c3bd254b04d6918e35b94861ad74be26f)",
   "artifacts": [
     {
-      "path": "dev/tc4port/thaumcraft-forge/0.1.0-20757/thaumcraft-forge-0.1.0-20757-api.jar",
-      "sha256": "3a8fb3c91681c7984ea5e85a02f731394048119892b0bc7401f79ca72a66fa55"
+      "path": "dev/tc4port/thaumcraft-forge/0.1.0-20759/thaumcraft-forge-0.1.0-20759-api.jar",
+      "sha256": "7b3a5df4c5bace52d166beba2f25598232ac813dee115e1ced8170ba3b7b1c35"
     },
     {
-      "path": "dev/tc4port/thaumcraft-forge/0.1.0-20757/thaumcraft-forge-0.1.0-20757-sources.jar",
-      "sha256": "a655931ae2a5d3d18134e1f4e9015f2344d6ac9a2372d56a5075f8b50df75ada"
+      "path": "dev/tc4port/thaumcraft-forge/0.1.0-20759/thaumcraft-forge-0.1.0-20759-sources.jar",
+      "sha256": "3e8c0bfd843f1eced141a082c3d7355cbc84af96de1d90da729a7b5884e1aa60"
     },
     {
-      "path": "dev/tc4port/thaumcraft-forge/0.1.0-20757/thaumcraft-forge-0.1.0-20757.jar",
-      "sha256": "5182730e45fbe9d9b53fc9e4ce3bb071aa7f4e5d1149ec3300a5926e5b27048d"
+      "path": "dev/tc4port/thaumcraft-forge/0.1.0-20759/thaumcraft-forge-0.1.0-20759.jar",
+      "sha256": "9ecced9a4681c76fcb9f023e4d205d8f545700a2b1d241fda95f2eab2979dc9f"
     },
     {
-      "path": "dev/tc4port/thaumcraft-forge/0.1.0-20757/thaumcraft-forge-0.1.0-20757.pom",
-      "sha256": "a3865c641122f273660a7c77269b88637b2fc7f2b05cf26bff91710a3e419bc0"
+      "path": "dev/tc4port/thaumcraft-forge/0.1.0-20759/thaumcraft-forge-0.1.0-20759.pom",
+      "sha256": "66f6ec6488d8b2c535607f20fc3a96f08c2140f4c03b528002dca0a8c117ea39"
     }
   ]
 }
