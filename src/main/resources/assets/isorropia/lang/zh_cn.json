@@ -135,7 +135,7 @@
   "isorropia.research_page.creatureinfusions.14": "§n钻石之皮§r：<BR>用金属为皮肤注魔会缓慢毒害生物，因为皮肤是至关重要的器官，而金属对普通生物的生理而言属于异物。因此，一切并非由非生命材质构成的东西都会因此受害。<BR>这个问题的解药是钻石，因为它同样由碳构成，与皮肤本身别无二致，不会从内部把我的活体造物毒害致死。",
   "isorropia.research_page.creatureinfusions.15": "§n电击之皮§r：<BR>红石的效果惊人。遍布皮肤的红石腺与石英腺协同运作。当红石腺发出猛烈撞击的信号时，石英腺会接住它并将其转化为电击，教训那个胆敢拳打我新宠物的白痴！<BR>我原本担心这个过程会伤到生物本身，事实证明是多虑了。不知为何，皮肤本身就起到了护甲的作用，把电流从被注魔生物宝贵的体内导走。",
   "isorropia.research_page.creatureinfusions.16": "只有当这只生物突然开始垂涎自己的肢体时，才会成为问题。",
-  "isorropia.research_page.creatureinfusions.17": "§n奇迹之血§r：<BR>只要吃得够好，我的血液就能从内部慢慢愈合伤口。动物则没有这种能力。与其去弄清这种特性为何存在并加以修正，不如抽出我自己的血液注入生物体内，这已得到了我想要的结果。",
+  "isorropia.research_page.creatureinfusions.17": "§n觉醒之血§r：<BR>这项注魔赋予生物的循环系统以初级的知觉。它的血液会以快得多的速度凝结，并主动改道流向受伤部位，从而加速愈合。接受此注魔的生物会在受伤后缓慢地恢复生命值。",
   "isorropia.research_page.creatureinfusions.18": "§n便携性§r:<BR>你的收容法杖核心价值连城，但把生物装罐和放出的过程在玻璃与灵气上都代价不菲。如今有了一个可能更高效的替代方案。<BR>你的§5便携性§0注魔会在生物周围套上一只罐子，并使其在更高维度中略微位移。轻点一下法杖就能把它拉回物质位面，将生物困在其中；再点一下则会放出野兽，并把罐子移回虚空，让它在那里自我重组以备下次使用。",
   "tc.research_name.isorropia:creatureinfusions": "生物注魔",
   "tc.research_text.isorropia:creatureinfusions": "为活物注魔",
@@ -491,5 +491,15 @@
   "jei.isorropia.organ.heart": "心脏",
   "jei.isorropia.organ.muscle": "肌肉",
   "jei.isorropia.organ.skin": "皮肤",
-  "jei.isorropia.organ.void": "虚空"
+  "jei.isorropia.organ.void": "虚空",
+  "isorropia.self_infusion.quicksilver_limb": "水银之肢",
+  "isorropia.self_infusion.morphic_fingers": "变形指",
+  "isorropia.self_infusion.awakened_blood": "觉醒之血",
+  "isorropia.self_infusion.diamond_skin": "钻石之皮",
+  "isorropia.self_infusion.silver_heart": "银心",
+  "isorropia.self_infusion.synth_skin": "合成皮肤",
+  "isorropia.self_infusion.amphibious": "两栖吐息",
+  "isorropia.self_infusion.warped_tumor": "扭曲肿瘤",
+  "isorropia.self_infusion.spider_climb": "蛛行",
+  "isorropia.self_infusion.chameleon_skin": "变色龙之皮"
 }

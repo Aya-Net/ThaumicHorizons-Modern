@@ -178,8 +178,17 @@ public final class VatInfusionCategory implements IRecipeCategory<InfusionDispla
             String organ = string(json, "organ", "");
             return organ.isEmpty() ? null : Component.translatable("jei.isorropia.organ", Component.translatable("jei.isorropia.organ." + organ));
         }
-        // Self infusions carry both an infusion id (with underscores) and the research key that names
-        // them; only the research key has a translation, so use that and never the raw infusion id.
+        // A self infusion is named after itself, like upstream's "Self: Diamondflesh". Three of them
+        // hang off the umbrella selfinfusion research, so the research key alone would label them all
+        // "Self infusion"; prefer the per-infusion name and fall back to the research name.
+        String infusion = string(json, "infusion", "");
+        if (!infusion.isEmpty()) {
+            String path = infusion.contains(":") ? infusion.substring(infusion.indexOf(':') + 1) : infusion;
+            String key = "isorropia.self_infusion." + path;
+            if (net.minecraft.client.resources.language.I18n.exists(key)) {
+                return Component.translatable("jei.isorropia.result", Component.translatable(key));
+            }
+        }
         String research = string(json, "research", "");
         return research.isEmpty() ? null : Component.translatable("jei.isorropia.result", Component.translatable("tc.research_name." + research));
     }

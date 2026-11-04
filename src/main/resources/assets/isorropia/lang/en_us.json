@@ -135,7 +135,7 @@
   "isorropia.research_page.creatureinfusions.14": "§nDiamond Skin§r:<BR>Infusing the Skin with metal will slowly poison a creature, due to the fact that the skin is a vital organ and metal is foreign to the biology of a normal creature. Therefore, everything that is not made of a non-living material would suffer.<BR>A remedy to that problem is Diamond, for it is also made of carbon, just like the skin itself and will not poison the my living creation from the inside out.",
   "isorropia.research_page.creatureinfusions.15": "§nShockskin§r:<BR>Redstone works marvelously. Redstone- and Quartz glands all over the skin work in symbiosis. If the redstone glands send a signal of a major impact, the quartz glands will catch it and turn it into an electric shock, harming the idiot who dared punch my new pet!<BR>My fears for this process to harm the creature itself were unfounded. For some reason, the skin acts as armour itself, conducting the electricity away from the valuable insides of the infused being.",
   "isorropia.research_page.creatureinfusions.16": "It would only become a problem if the creature were to suddenly develop a taste for it's own limbs.",
-  "isorropia.research_page.creatureinfusions.17": "§nMiracle Blood§r:<BR>My blood can slowly heal my wounds from the inside, if I'm well enough fed. An animal lacks that ability. Instead of trying to find out why that quirk is and fixing it, taking my own blood and infusing it into the creature has yielded the result I wanted.",
+  "isorropia.research_page.creatureinfusions.17": "§nAwakened Blood§r:<BR>Grants rudimentary awareness to a creature's circulatory system. Its blood clots much more rapidly and actively redirects itself to injury sites to accelerate healing. A creature subject to this infusion will slowly regenerate from damage.",
   "isorropia.research_page.creatureinfusions.18": "§nPortability§r:<BR>Your containment focus is invaluable, but the process of jarring and releasing a creature can be costly in both glass and Vis. Now there is a potentially more efficient alternative.<BR>Your §5Portability§0 infusion places a jar around the creature and displaces it slightly in higher dimensions. One tap of your wand can pull it back onto the material plane, trapping the creature; another releases the beast and shifts the jar back to the void, where it reassembles itself for future use.",
   "tc.research_name.isorropia:creatureinfusions": "Creature Infusions",
   "tc.research_text.isorropia:creatureinfusions": "Infusing the living",
@@ -491,5 +491,15 @@
   "jei.isorropia.organ.heart": "Heart",
   "jei.isorropia.organ.muscle": "Muscle",
   "jei.isorropia.organ.skin": "Skin",
-  "jei.isorropia.organ.void": "Void"
+  "jei.isorropia.organ.void": "Void",
+  "isorropia.self_infusion.quicksilver_limb": "Quicksilver Limbs",
+  "isorropia.self_infusion.morphic_fingers": "Morphic Fingers",
+  "isorropia.self_infusion.awakened_blood": "Awakened Blood",
+  "isorropia.self_infusion.diamond_skin": "Diamondflesh",
+  "isorropia.self_infusion.silver_heart": "Silverwood Heart",
+  "isorropia.self_infusion.synth_skin": "Synthskin",
+  "isorropia.self_infusion.amphibious": "Amphibious Breath",
+  "isorropia.self_infusion.warped_tumor": "Warped Tumor",
+  "isorropia.self_infusion.spider_climb": "Spider Climb",
+  "isorropia.self_infusion.chameleon_skin": "Chameleon Skin"
 }

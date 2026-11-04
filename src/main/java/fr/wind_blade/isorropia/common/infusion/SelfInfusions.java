@@ -17,8 +17,10 @@ import dev.tc4port.thaumcraft.api.player.PlayerWarpView;
 
 /**
  * The abilities a player can grow into a reincarnation body: named by {@code infusion} in a self infusion
- * recipe and handed over when a reborn player climbs out of the vat. Everything here is reapplied or decayed
- * per tick, which is how upstream did it too — none of these are permanent potion effects.
+ * recipe and handed over when a reborn player climbs out of the vat. Upstream handed these out as
+ * {@code Integer.MAX_VALUE} potion effects and re-applied them every tick, so a longer or stronger
+ * instance from elsewhere can only replace them until the next tick puts them back; that is what keeps
+ * a self infusion from being washed out by a potion of the same effect.
  */
 public final class SelfInfusions {
     public static final ResourceLocation QUICKSILVER_LIMB = id("quicksilver_limb");
@@ -46,7 +48,8 @@ public final class SelfInfusions {
             hold(player, MobEffects.JUMP, 0);
             hold(player, MobEffects.MOVEMENT_SPEED, 0);
         }
-        if (data.hasSelfInfusion(AWAKENED_BLOOD) && player.getHealth() < player.getMaxHealth()) {
+        // Upstream granted the regeneration unconditionally, not only while wounded.
+        if (data.hasSelfInfusion(AWAKENED_BLOOD)) {
             hold(player, MobEffects.REGENERATION, 0);
         }
         if (data.hasSelfInfusion(DIAMOND_SKIN)) {
@@ -78,14 +81,14 @@ public final class SelfInfusions {
     private static void hold(Player player, MobEffect effect, int amplifier) {
         MobEffectInstance current = player.getEffect(effect);
         if (current == null || current.getDuration() < 40 || current.getAmplifier() != amplifier) {
-            player.addEffect(new MobEffectInstance(effect, 100, amplifier, true, false, false));
+            player.addEffect(new MobEffectInstance(effect, Integer.MAX_VALUE, amplifier, true, false, true));
         }
     }
     //?} else {
     /*private static void hold(Player player, net.minecraft.core.Holder<MobEffect> effect, int amplifier) {
         MobEffectInstance current = player.getEffect(effect);
         if (current == null || current.getDuration() < 40 || current.getAmplifier() != amplifier) {
-            player.addEffect(new MobEffectInstance(effect, 100, amplifier, true, false, false));
+            player.addEffect(new MobEffectInstance(effect, Integer.MAX_VALUE, amplifier, true, false, true));
         }
     }
     *///?}
