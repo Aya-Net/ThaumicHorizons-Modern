@@ -1,0 +1,22 @@
+{
+  "infusion": "isorropia:thaumium_fists",
+  "research": "isorropia:selfinfusion",
+  "instability": 6,
+  "components": [
+    {
+      "item": "thaumcraft:thaumium_sword"
+    },
+    {
+      "item": "thaumcraft:thaumium_sword"
+    },
+    {
+      "item": "thaumcraft:thaumium_ingot",
+      "count": 2
+    }
+  ],
+  "aspects": {
+    "thaumcraft:telum": 24,
+    "thaumcraft:metallum": 16,
+    "thaumcraft:praecantatio": 16
+  }
+}

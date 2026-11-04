@@ -34,6 +34,7 @@ public final class SelfInfusions {
     public static final ResourceLocation CHAMELEON_SKIN = id("chameleon_skin");
     /** The portable arcane workbench is a container of its own; it arrives with the morphic fingers screen. */
     public static final ResourceLocation MORPHIC_FINGERS = id("morphic_fingers");
+    public static final ResourceLocation THAUMIUM_FISTS = id("thaumium_fists");
 
     private SelfInfusions() {
     }
@@ -75,7 +76,51 @@ public final class SelfInfusions {
         if (data.hasSelfInfusion(WARPED_TUMOR)) {
             absorbWarp(player, data);
         }
+        // Thaumium fists only bite while both hands are empty, so the bonus never stacks onto a weapon.
+        if (data.hasSelfInfusion(THAUMIUM_FISTS)) {
+            fists(player);
+        }
     }
+
+    //? if forge {
+    private static final java.util.UUID FISTS_ID = java.util.UUID.fromString("0f3e9d7c-6a2b-4c58-9a41-2b7d5e3a1c60");
+
+    private static void fists(Player player) {
+        net.minecraft.world.entity.ai.attributes.AttributeInstance damage =
+                player.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE);
+        if (damage == null) {
+            return;
+        }
+        boolean empty = player.getMainHandItem().isEmpty() && player.getOffhandItem().isEmpty();
+        boolean present = damage.getModifier(FISTS_ID) != null;
+        if (empty && !present) {
+            damage.addPermanentModifier(new net.minecraft.world.entity.ai.attributes.AttributeModifier(
+                    FISTS_ID, "isorropia:thaumium_fists", 5.0,
+                    net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADDITION));
+        } else if (!empty && present) {
+            damage.removeModifier(FISTS_ID);
+        }
+    }
+    //?} else {
+    /*private static final net.minecraft.resources.ResourceLocation FISTS_ID =
+            net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("isorropia", "thaumium_fists");
+
+    private static void fists(Player player) {
+        net.minecraft.world.entity.ai.attributes.AttributeInstance damage =
+                player.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE);
+        if (damage == null) {
+            return;
+        }
+        boolean empty = player.getMainHandItem().isEmpty() && player.getOffhandItem().isEmpty();
+        boolean present = damage.getModifier(FISTS_ID) != null;
+        if (empty && !present) {
+            damage.addPermanentModifier(new net.minecraft.world.entity.ai.attributes.AttributeModifier(
+                    FISTS_ID, 5.0, net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_VALUE));
+        } else if (!empty && present) {
+            damage.removeModifier(FISTS_ID);
+        }
+    }
+    *///?}
 
     //? if forge {
     private static void hold(Player player, MobEffect effect, int amplifier) {
