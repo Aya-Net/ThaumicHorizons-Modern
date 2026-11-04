@@ -27,13 +27,19 @@ public final class OrePigDrops {
 
     @Nullable
     private static List<Entry> cache;
+    private static List<String> cachedAllowed = List.of();
+    private static boolean cachedDustFallback;
 
     private OrePigDrops() {
     }
 
     public static synchronized List<Entry> entries() {
-        if (cache == null) {
-            cache = build();
+        List<String> allowed = List.copyOf(ConfigIS.ORE_PIG_MATERIALS.get());
+        boolean dustFallback = ConfigIS.ORE_PIG_DUST_FALLBACK.get();
+        if (cache == null || !cachedAllowed.equals(allowed) || cachedDustFallback != dustFallback) {
+            cache = build(allowed, dustFallback);
+            cachedAllowed = allowed;
+            cachedDustFallback = dustFallback;
         }
         return cache;
     }
@@ -61,12 +67,13 @@ public final class OrePigDrops {
         return entry == null ? ItemStack.EMPTY : new ItemStack(entry.drop());
     }
 
-    private static List<Entry> build() {
+    private static List<Entry> build(List<String> allowed, boolean dustFallback) {
         Map<String, Item> nuggets = firstItems("nuggets/");
-        Map<String, Item> dusts = firstItems("dusts/");
+        Map<String, Item> dusts = dustFallback ? firstItems("dusts/") : Map.of();
         Set<String> ores = new TreeSet<>(firstItems("ores/").keySet());
         List<Entry> entries = new ArrayList<>();
         for (String material : ores) {
+            if (!fr.wind_blade.isorropia.common.config.OrePigPolicy.allows(material, nuggets.containsKey(material), allowed, dustFallback)) continue;
             Item drop = nuggets.getOrDefault(material, dusts.get(material));
             if (drop != null) {
                 entries.add(new Entry(material, drop));
