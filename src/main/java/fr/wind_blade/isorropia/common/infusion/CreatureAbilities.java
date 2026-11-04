@@ -25,11 +25,11 @@ import java.util.List;
  * These are the effects upstream keys off the infusion id, so the ids here are the recipe ids.
  */
 public final class CreatureAbilities {
-    public static final ResourceLocation SELF_SHEARING = id("selfshearing");
+    public static final ResourceLocation SELF_SHEARING = id("self_shearing");
     public static final ResourceLocation AWAKENED_BLOOD = id("awakened_blood");
     public static final ResourceLocation PORTABILITY = id("portability");
-    public static final ResourceLocation ENDER_HEART = id("enderheart");
-    public static final ResourceLocation SHOCK_SKIN = id("shockskin");
+    public static final ResourceLocation ENDER_HEART = id("ender_heart");
+    public static final ResourceLocation SHOCK_SKIN = id("shock_skin");
 
     private static final int SHEAR_INTERVAL = 100;
     private static final int BLOOD_INTERVAL = 50;
