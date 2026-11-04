@@ -24,6 +24,7 @@ import org.joml.Matrix4f;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,6 +45,10 @@ public class BloodInfuserScreen extends AbstractContainerScreen<BloodInfuserMenu
     private List<AspectId> known = List.of();
     /** TH cached the predicted injection on open and after each dial click. */
     private List<MobEffectInstance> cachedEffects = List.of();
+    /** Mirrors of the server tile; kept even if the client block entity is briefly unavailable. */
+    private int cachedMode;
+    private Map<AspectId, Integer> cachedDial = Map.of();
+    private Map<AspectId, Integer> cachedAcquired = Map.of();
     @Nullable
     private AspectId mousedOver;
     @Nullable
@@ -90,19 +95,19 @@ public class BloodInfuserScreen extends AbstractContainerScreen<BloodInfuserMenu
         }
         TileBloodInfuser infuser = this.tile();
         if (infuser != null) {
+            this.cachedMode = infuser.getMode();
+            this.cachedDial = new LinkedHashMap<>(infuser.dialled());
+            this.cachedAcquired = new LinkedHashMap<>(infuser.acquired());
             this.cachedEffects = infuser.getCurrentEffects();
         }
     }
 
     /** TH's flat dial: one entry per dialled unit, in dial order. */
     private List<AspectId> dialFlat() {
-        TileBloodInfuser infuser = this.tile();
         List<AspectId> flat = new ArrayList<>();
-        if (infuser != null) {
-            for (Map.Entry<AspectId, Integer> entry : infuser.dialled().entrySet()) {
-                for (int i = 0; i < entry.getValue(); i++) {
-                    flat.add(entry.getKey());
-                }
+        for (Map.Entry<AspectId, Integer> entry : this.cachedDial.entrySet()) {
+            for (int i = 0; i < entry.getValue(); i++) {
+                flat.add(entry.getKey());
             }
         }
         return flat;
@@ -135,11 +140,7 @@ public class BloodInfuserScreen extends AbstractContainerScreen<BloodInfuserMenu
 
     @Override
     protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
-        TileBloodInfuser infuser = this.tile();
-        if (infuser == null) {
-            return;
-        }
-        this.drawEssentiaSelected(graphics, infuser);
+        this.drawEssentiaSelected(graphics);
         this.drawAspectList(graphics);
         RenderSystem.enableBlend();
         if (this.canScrollLeft()) {
@@ -152,9 +153,9 @@ public class BloodInfuserScreen extends AbstractContainerScreen<BloodInfuserMenu
         } else {
             graphics.blit(TEXTURE, 135, 75, 201, 144, 24, 8);
         }
-        if (infuser.getMode() == 1) {
+        if (this.cachedMode == 1) {
             graphics.blit(TEXTURE, 38, 57, 178, 130, 6, 6);
-        } else if (infuser.getMode() == 2) {
+        } else if (this.cachedMode == 2) {
             graphics.blit(TEXTURE, 38, 70, 178, 130, 6, 6);
         }
         RenderSystem.disableBlend();
@@ -168,14 +169,14 @@ public class BloodInfuserScreen extends AbstractContainerScreen<BloodInfuserMenu
     }
 
     /** TH's {@code drawEssentiaSelected}: dial order, two per row; units not yet soaked in blink. */
-    private void drawEssentiaSelected(GuiGraphics graphics, TileBloodInfuser infuser) {
+    private void drawEssentiaSelected(GuiGraphics graphics) {
         int flat = 0;
-        for (Map.Entry<AspectId, Integer> entry : infuser.dialled().entrySet()) {
+        for (Map.Entry<AspectId, Integer> entry : this.cachedDial.entrySet()) {
             AspectId aspect = entry.getKey();
             for (int unit = 1; unit <= entry.getValue() && flat < 8; unit++, flat++) {
                 int x = 54 + (flat % 2 == 1 ? 17 : 0);
                 int y = 12 + 17 * (flat / 2);
-                boolean pending = infuser.acquiredAmount(aspect) < unit;
+                boolean pending = this.cachedAcquired.getOrDefault(aspect, 0) < unit;
                 if (this.known.contains(aspect)) {
                     ThaumcraftClientRenderApi.drawAspect(graphics, aspect, x, y, pending ? 0.4F : 1.0F);
                 } else {
@@ -332,20 +333,16 @@ public class BloodInfuserScreen extends AbstractContainerScreen<BloodInfuserMenu
         }
         int x = (int) mouseX - this.leftPos;
         int y = (int) mouseY - this.topPos;
-        TileBloodInfuser infuser = this.tile();
-        if (infuser == null) {
-            return false;
-        }
         int clickX = x - 38;
         int clickY = y - 57;
         if (clickX >= 0 && clickY >= 0 && clickX <= 6 && clickY <= 6) {
             // TH: the single-shot dot toggles between idle and one treatment.
-            this.sendButton(infuser.getMode() == 1 ? 0 : 1);
+            this.sendButton(this.cachedMode == 1 ? 0 : 1);
             return true;
         }
         clickY = y - 70;
         if (clickX >= 0 && clickY >= 0 && clickX <= 6 && clickY <= 6) {
-            this.sendButton(infuser.getMode() == 2 ? 0 : 2);
+            this.sendButton(this.cachedMode == 2 ? 0 : 2);
             return true;
         }
         clickX = x - 111;
@@ -389,7 +386,20 @@ public class BloodInfuserScreen extends AbstractContainerScreen<BloodInfuserMenu
         if (this.minecraft != null && this.minecraft.gameMode != null) {
             this.minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId, id);
         }
+        if (id >= 0 && id <= 2) {
+            this.cachedMode = id;
+        }
         this.refresh();
+    }
+
+    @Override
+    protected void containerTick() {
+        super.containerTick();
+        // The tile's update packet can land a tick after the button click; keep the dial in step.
+        if (this.minecraft != null && this.minecraft.level != null
+                && this.minecraft.level.getGameTime() % 5 == 0) {
+            this.refresh();
+        }
     }
 
     private void flash(AspectId aspect, double mouseX, double mouseY) {

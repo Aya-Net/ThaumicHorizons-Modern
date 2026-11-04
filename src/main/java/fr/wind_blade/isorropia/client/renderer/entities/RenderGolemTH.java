@@ -34,17 +34,29 @@ public class RenderGolemTH extends EntityRenderer<EntityGolemTH> {
             state = Blocks.OBSIDIAN.defaultBlockState();
         }
         if (!state.isAir()) {
-            float bob = (float) Math.sin((entity.tickCount + partialTick) * 0.25F) * 0.04F;
-            poseStack.pushPose();
-            poseStack.translate(0.0D, entity.getBbHeight() * 0.5D + bob, 0.0D);
-            float scale = 0.9F;
-            poseStack.scale(scale, scale, scale);
-            poseStack.translate(-0.5D, -0.5D, -0.5D);
-            Minecraft.getInstance().getBlockRenderer().renderSingleBlock(state, poseStack, buffers, packedLight,
-                    OverlayTexture.NO_OVERLAY, ModelData.EMPTY, ItemBlockRenderTypes.getRenderType(state, false));
-            poseStack.popPose();
+            // TH's golem is a small humanoid built from the block it was raised from, not one
+            // floating full-size cube. Six cubes give it a head, torso, arms and legs.
+            float bob = (float) Math.sin((entity.tickCount + partialTick) * 0.25F) * 0.03F;
+            float gait = (float) Math.sin((entity.tickCount + partialTick) * 0.35F) * 0.12F;
+            cube(state, poseStack, buffers, packedLight, 0.0D, 1.02D + bob, 0.0D, 0.34F);
+            cube(state, poseStack, buffers, packedLight, 0.0D, 0.62D + bob, 0.0D, 0.48F);
+            cube(state, poseStack, buffers, packedLight, -0.32D, 0.64D + bob + gait, 0.0D, 0.24F);
+            cube(state, poseStack, buffers, packedLight, 0.32D, 0.64D + bob - gait, 0.0D, 0.24F);
+            cube(state, poseStack, buffers, packedLight, -0.14D, 0.24D + bob - gait, 0.0D, 0.26F);
+            cube(state, poseStack, buffers, packedLight, 0.14D, 0.24D + bob + gait, 0.0D, 0.26F);
         }
         super.render(entity, entityYaw, partialTick, poseStack, buffers, packedLight);
+    }
+
+    private static void cube(BlockState state, PoseStack poseStack, MultiBufferSource buffers, int packedLight,
+            double x, double y, double z, float size) {
+        poseStack.pushPose();
+        poseStack.translate(x, y, z);
+        poseStack.scale(size, size, size);
+        poseStack.translate(-0.5D, -0.5D, -0.5D);
+        Minecraft.getInstance().getBlockRenderer().renderSingleBlock(state, poseStack, buffers, packedLight,
+                OverlayTexture.NO_OVERLAY, ModelData.EMPTY, ItemBlockRenderTypes.getRenderType(state, false));
+        poseStack.popPose();
     }
 
     @Override

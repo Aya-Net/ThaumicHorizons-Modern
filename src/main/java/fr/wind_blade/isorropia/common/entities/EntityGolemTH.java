@@ -148,7 +148,13 @@ public class EntityGolemTH extends PathfinderMob {
         this.goalSelector.addGoal(5, new OwnerFollowGoal(this, 3.0D));
         this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+        // TH's AIHurtByTarget never retaliates against the golem's own maker.
+        this.targetSelector.addGoal(1, new HurtByTargetGoal(this) {
+            @Override
+            public boolean canUse() {
+                return EntityGolemTH.this.getOwner() != EntityGolemTH.this.getLastHurtByMob() && super.canUse();
+            }
+        });
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Monster.class, true));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 10, true, false,
                 this::isBerserkTarget));
@@ -279,7 +285,9 @@ public class EntityGolemTH extends PathfinderMob {
     @Override
     public void tick() {
         super.tick();
-        if (this.level().isClientSide) {
+        if (this.level().isClientSide || this.isDeadOrDying() || !this.isAlive()) {
+            // A dying golem must never be healed back above zero: the regen tick used to revive it
+            // during the death animation, which left a 0-HP construct walking around.
             return;
         }
         AnimatedBlockType type = this.getGolemType();

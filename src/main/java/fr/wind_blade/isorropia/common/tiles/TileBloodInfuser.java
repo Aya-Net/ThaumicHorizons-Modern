@@ -387,6 +387,11 @@ public class TileBloodInfuser extends BlockEntity implements EssentiaTransport, 
         return this.colour;
     }
 
+    /** How much of each dialled aspect the machine has soaked so far, for the client dial. */
+    public Map<AspectId, Integer> acquired() {
+        return java.util.Collections.unmodifiableMap(this.acquired);
+    }
+
     /** The dialled aspects with their multiplicities, for rendering and probes. */
     public Map<AspectId, Integer> dialled() {
         Map<AspectId, Integer> dial = new LinkedHashMap<>();
@@ -524,7 +529,7 @@ public class TileBloodInfuser extends BlockEntity implements EssentiaTransport, 
 
     // ---------------------------------------------------------------- sync + persistence
 
-    private void sync() {
+    public void sync() {
         TileSync.toWatchers(this);
     }
 

@@ -81,6 +81,8 @@ public class BlockBloodInfuser extends Block implements EntityBlock {
             return InteractionResult.PASS;
         }
         if (player instanceof ServerPlayer serverPlayer) {
+            // The screen reads its dial from the client block entity; push the state before it opens.
+            infuser.sync();
             Menus.open(serverPlayer, infuser, infuser.getBlockPos());
         }
         return InteractionResult.sidedSuccess(level.isClientSide);
