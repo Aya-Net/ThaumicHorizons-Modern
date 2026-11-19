@@ -34,7 +34,8 @@ public final class HeldWandTargets {
             public boolean canStart(WandBlockUseContext context) {
                 if (context.hand() != InteractionHand.MAIN_HAND) return false;
                 var machine = context.level().getBlockEntity(context.hit().getBlockPos());
-                return machine instanceof TileVisDynamo || machine instanceof TileEtherealShard;
+                return (machine instanceof TileVisDynamo || machine instanceof TileEtherealShard)
+                        && VisCompat.wandStorage(context.wand()).isPresent();
             }
 
             @Override
