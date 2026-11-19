@@ -3,6 +3,7 @@ package fr.wind_blade.isorropia.common.blocks;
 import fr.wind_blade.isorropia.common.items.ItemKeystone;
 import fr.wind_blade.isorropia.common.tiles.TileSlot;
 import fr.wind_blade.isorropia.common.world.PocketPlaneStore;
+import fr.wind_blade.isorropia.common.compat.VisCompat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -80,7 +81,7 @@ public class BlockSlot extends Block implements EntityBlock {
                 }
                 return InteractionResult.CONSUME;
             }
-            if (!slot.portalOpen() && dev.tc4port.thaumcraft.api.wand.WandApi.view(held).isPresent()) {
+            if (!slot.portalOpen() && VisCompat.wandView(held).isPresent()) {
                 if (client) return InteractionResult.SUCCESS;
                 slot.makePortal(held, player);
                 return InteractionResult.CONSUME;

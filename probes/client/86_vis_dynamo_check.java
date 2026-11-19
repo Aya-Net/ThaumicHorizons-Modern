@@ -13,21 +13,21 @@ sb.append("be=").append(be == null ? "null" : be.getClass().getSimpleName());
 if (be instanceof fr.wind_blade.isorropia.common.tiles.TileVisDynamo dynamo) {
     sb.append(" supplying=").append(dynamo.canSupplyVis());
     sb.append(" endpoint=").append(dynamo.networkEndpoint());
-    for (var channel : dev.tc4port.thaumcraft.api.aspect.VisChannel.values()) {
+    for (var channel : fr.wind_blade.isorropia.common.compat.VisCompat.PRIMALS) {
         sb.append(" ").append(channel).append("=").append(dynamo.offeredCentivis(channel));
     }
 }
 sb.append(" using=").append(player.isUsingItem());
 var held = player.getItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND);
-sb.append(" wand_aer=").append(dev.tc4port.thaumcraft.api.wand.WandApi.view(held)
-        .map(v -> String.valueOf(v.visCentivis().get(dev.tc4port.thaumcraft.api.aspect.VisChannel.AER))).orElse("-"));
+sb.append(" wand_aer=").append(fr.wind_blade.isorropia.common.compat.VisCompat.wandView(held)
+        .map(v -> String.valueOf(v.visCentivis().get(dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.AER))).orElse("-"));
 sb.append(" relay_parent=").append(level.getBlockEntity(relayPos)
         instanceof dev.tc4port.thaumcraft.block.entity.VisRelayBlockEntity relay
         ? relay.parentPos().orElse(null) : "-");
 
 int first = dev.tc4port.thaumcraft.api.node.VisNetworkApi.drain(level, relayPos,
-        dev.tc4port.thaumcraft.api.aspect.VisChannel.AER, 100, dev.tc4port.thaumcraft.api.aspect.VisAction.EXECUTE);
+        dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.AER, 100, dev.tc4port.thaumcraft.api.aspect.VisAction.EXECUTE);
 int second = dev.tc4port.thaumcraft.api.node.VisNetworkApi.drain(level, relayPos,
-        dev.tc4port.thaumcraft.api.aspect.VisChannel.AER, 100, dev.tc4port.thaumcraft.api.aspect.VisAction.EXECUTE);
+        dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.AER, 100, dev.tc4port.thaumcraft.api.aspect.VisAction.EXECUTE);
 sb.append(" drain1=").append(first).append(" drain2=").append(second);
 return sb.toString();

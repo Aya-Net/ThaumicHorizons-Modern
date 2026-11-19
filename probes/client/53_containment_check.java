@@ -11,13 +11,13 @@ var pigs = level.getEntitiesOfClass(net.minecraft.world.entity.animal.Pig.class,
 sb.append("pigs nearby=").append(pigs.size()).append(" usingItem=").append(player.isUsingItem());
 for (int slot = 0; slot < player.getInventory().getContainerSize(); slot++) {
     var stack = player.getInventory().getItem(slot);
-    if (!stack.isEmpty() && !dev.tc4port.thaumcraft.api.wand.WandApi.view(stack).isPresent()) {
+    if (!stack.isEmpty() && !fr.wind_blade.isorropia.common.compat.VisCompat.wandView(stack).isPresent()) {
         sb.append("\n slot ").append(slot).append(": ").append(stack).append(" ").append(stack.getHoverName().getString());
         if (stack.getTag() != null && stack.getTag().contains("EntityData")) {
             sb.append(" holds=").append(stack.getTag().getCompound("EntityData").getString("id"));
         }
     }
 }
-var view = dev.tc4port.thaumcraft.api.wand.WandApi.view(player.getMainHandItem());
+var view = fr.wind_blade.isorropia.common.compat.VisCompat.wandView(player.getMainHandItem());
 sb.append("\nvis=").append(view.map(v -> v.visCentivis().toString()).orElse("no wand"));
 return sb.toString();

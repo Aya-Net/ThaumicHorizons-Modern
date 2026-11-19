@@ -115,7 +115,7 @@ try {
         return sb + "no_vortex_tile\n";
     }
     var aspects = new java.util.LinkedHashMap<dev.tc4port.thaumcraft.api.aspect.AspectId, Integer>();
-    aspects.put(dev.tc4port.thaumcraft.api.aspect.VisChannel.TERRA.aspectId(), 40);
+    aspects.put(dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.TERRA, 40);
     vortex.setAspects(aspects);
     vortex.setBeams(6);
 

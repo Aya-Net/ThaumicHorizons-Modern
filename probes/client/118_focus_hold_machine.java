@@ -4,10 +4,10 @@ var mc = net.minecraft.client.Minecraft.getInstance();
 var server = mc.getSingleplayerServer();
 var level = server.overworld();
 var player = server.getPlayerList().getPlayer(mc.player.getUUID());
-var ignis = dev.tc4port.thaumcraft.api.aspect.VisChannel.IGNIS;
-var aer = dev.tc4port.thaumcraft.api.aspect.VisChannel.AER;
+var ignis = dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.IGNIS;
+var aer = dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.AER;
 var start = String.valueOf(System.getProperties().get("isorropia.focusHold")).split(",");
-var vis = dev.tc4port.thaumcraft.api.wand.WandApi.view(player.getMainHandItem()).orElseThrow().visCentivis();
+var vis = fr.wind_blade.isorropia.common.compat.VisCompat.wandView(player.getMainHandItem()).orElseThrow().visCentivis();
 int ignisSpent = Integer.parseInt(start[1]) - vis.get(ignis);
 int aerSpent = Integer.parseInt(start[0]) - vis.get(aer);
 var sb = new StringBuilder("controlFires=").append(ignisSpent > 0 && aerSpent == 0)

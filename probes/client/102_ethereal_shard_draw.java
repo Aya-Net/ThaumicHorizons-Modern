@@ -10,7 +10,7 @@ var sb = new StringBuilder();
 var shardPos = net.minecraft.core.BlockPos.containing(200.5, 311.0, 103.5);
 var relayPos = net.minecraft.core.BlockPos.containing(200.5, 311.0, 104.5);
 var nodePos = net.minecraft.core.BlockPos.containing(200.5, 311.0, 105.5);
-var aer = dev.tc4port.thaumcraft.api.aspect.VisChannel.AER.aspectId();
+var aer = dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.AER;
 
 if (!(level.getBlockEntity(shardPos) instanceof fr.wind_blade.isorropia.common.tiles.TileEtherealShard shard)) {
     return "shard=missing";
@@ -19,7 +19,7 @@ if (!(level.getBlockEntity(shardPos) instanceof fr.wind_blade.isorropia.common.t
 sb.append("stored=").append(shard.stored(aer));
 sb.append(" refilled=").append(shard.stored(aer) > 5);
 int drained = dev.tc4port.thaumcraft.api.node.VisNetworkApi.drain(level, shardPos,
-        dev.tc4port.thaumcraft.api.aspect.VisChannel.AER, 10,
+        dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.AER, 10,
         dev.tc4port.thaumcraft.api.aspect.VisAction.EXECUTE);
 sb.append(" network=").append(drained > 0);
 var synced = new java.util.concurrent.CompletableFuture<Boolean>();

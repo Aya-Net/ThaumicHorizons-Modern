@@ -47,7 +47,7 @@ sb.append("transBlock=").append(level.getBlockState(transPos).getBlock()).append
 if (!(level.getBlockEntity(nodePos) instanceof dev.tc4port.thaumcraft.block.entity.AuraNodeBlockEntity node)) {
     return sb.append("no_node_be\n").toString();
 }
-var aer = dev.tc4port.thaumcraft.api.aspect.VisChannel.AER.aspectId();
+var aer = dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.AER;
 node.setNodeState(new dev.tc4port.thaumcraft.api.node.AuraNodeState(
         java.util.Optional.empty(),
         dev.tc4port.thaumcraft.api.node.NodeTypeId.NORMAL,

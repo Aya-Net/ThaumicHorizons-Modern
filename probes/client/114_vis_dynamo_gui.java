@@ -39,7 +39,7 @@ player.connection.teleport(x, y, z, 0.0F, 0.0F);
 level.getChunkSource().move(player);
 
 var dynamo = (fr.wind_blade.isorropia.common.tiles.TileVisDynamo) level.getBlockEntity(dynamoPos);
-for (var channel : dev.tc4port.thaumcraft.api.aspect.VisChannel.values()) {
+for (var channel : fr.wind_blade.isorropia.common.compat.VisCompat.PRIMALS) {
     if (!dynamo.isEnabled(channel)) dynamo.toggle(channel);
 }
 var hit = new net.minecraft.world.phys.BlockHitResult(net.minecraft.world.phys.Vec3.atCenterOf(dynamoPos),
@@ -47,16 +47,16 @@ var hit = new net.minecraft.world.phys.BlockHitResult(net.minecraft.world.phys.V
 var used = fr.wind_blade.isorropia.common.blocks.BlocksIS.VIS_DYNAMO.get().use(level.getBlockState(dynamoPos), level,
         dynamoPos, player, net.minecraft.world.InteractionHand.MAIN_HAND, hit);
 sb.append("use=").append(used).append(" menu=").append(player.containerMenu.getClass().getSimpleName());
-var ignis = dev.tc4port.thaumcraft.api.aspect.VisChannel.IGNIS;
-var aer = dev.tc4port.thaumcraft.api.aspect.VisChannel.AER;
+var ignis = dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.IGNIS;
+var aer = dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.AER;
 sb.append(" button=").append(player.containerMenu.clickMenuButton(player, 2));
 sb.append(" ignisOff=").append(!dynamo.isEnabled(ignis)).append(" aerOn=").append(dynamo.isEnabled(aer));
 
 var wand = dev.tc4port.thaumcraft.api.wand.WandApi.createFullyCharged(
         dev.tc4port.thaumcraft.api.wand.WandMaterialId.WOOD, dev.tc4port.thaumcraft.api.wand.WandMaterialId.IRON);
-var before = dev.tc4port.thaumcraft.api.wand.WandApi.view(wand).orElseThrow().visCentivis();
+var before = fr.wind_blade.isorropia.common.compat.VisCompat.wandView(wand).orElseThrow().visCentivis();
 dynamo.beginCharging(player, wand);
-var after = dev.tc4port.thaumcraft.api.wand.WandApi.view(wand).orElseThrow().visCentivis();
+var after = fr.wind_blade.isorropia.common.compat.VisCompat.wandView(wand).orElseThrow().visCentivis();
 sb.append(" offerIgnis=").append(dynamo.offeredCentivis(ignis)).append(" offerAer=").append(dynamo.offeredCentivis(aer));
 sb.append(" paidIgnis=").append(before.get(ignis) - after.get(ignis)).append(" paidAer=").append(before.get(aer) - after.get(aer));
 return sb.toString();

@@ -36,7 +36,7 @@ level.setBlock(nodePos, dev.tc4port.thaumcraft.registry.TCBlocks.AURA_NODE.get()
 if (!(level.getBlockEntity(nodePos) instanceof dev.tc4port.thaumcraft.block.entity.AuraNodeBlockEntity node)) {
     return sb.append("no_node_be\n").toString();
 }
-var aer = dev.tc4port.thaumcraft.api.aspect.VisChannel.AER.aspectId();
+var aer = dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.AER;
 node.setNodeState(new dev.tc4port.thaumcraft.api.node.AuraNodeState(
         java.util.Optional.empty(),
         dev.tc4port.thaumcraft.api.node.NodeTypeId.HUNGRY,

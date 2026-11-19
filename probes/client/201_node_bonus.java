@@ -16,7 +16,7 @@ level.setBlock(nodePos, dev.tc4port.thaumcraft.registry.TCBlocks.ENERGIZED_AURA_
 if (!(level.getBlockEntity(nodePos) instanceof dev.tc4port.thaumcraft.block.entity.AuraNodeBlockEntity node)) {
     return "no_node_be";
 }
-var aer = dev.tc4port.thaumcraft.api.aspect.VisChannel.AER.aspectId();
+var aer = dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.AER;
 node.setNodeState(new dev.tc4port.thaumcraft.api.node.AuraNodeState(
         java.util.Optional.empty(),
         dev.tc4port.thaumcraft.api.node.NodeTypeId.NORMAL,
@@ -39,7 +39,7 @@ try {
     Thread.sleep(150);
 } catch (InterruptedException ignored) {
 }
-var available = node.drainEnergizedVis(dev.tc4port.thaumcraft.api.aspect.VisChannel.AER, 100000,
+var available = node.drainEnergizedVis(dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.AER, 100000,
         dev.tc4port.thaumcraft.api.aspect.VisAction.SIMULATE);
 sb.append("availableAfterTick=").append(available).append("\n");
 

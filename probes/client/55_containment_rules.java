@@ -36,7 +36,7 @@ pig.setNoAi(true);
 pig.setHealth(1.0F);
 level.addFreshEntity(pig);
 sb.append(" emptyJar=").append(fr.wind_blade.isorropia.common.infusion.SoulJar.hasEmptyJar(player))
-  .append(" wand=").append(dev.tc4port.thaumcraft.api.wand.WandApi.view(wand).isPresent());
+  .append(" wand=").append(fr.wind_blade.isorropia.common.compat.VisCompat.wandView(wand).isPresent());
 var use = mc.options.keyUse.getKey();
 // The server only syncs the wand it just put in hand at the end of its tick, after this probe returns, so the
 // client is handed the same wand directly; otherwise it would click with whatever it held before.

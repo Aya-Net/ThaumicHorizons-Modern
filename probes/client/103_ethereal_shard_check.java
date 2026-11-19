@@ -7,10 +7,10 @@ var player = server.getPlayerList().getPlayer(mc.player.getUUID());
 var sb = new StringBuilder();
 
 var shardPos = net.minecraft.core.BlockPos.containing(200.5, 311.0, 103.5);
-var aer = dev.tc4port.thaumcraft.api.aspect.VisChannel.AER.aspectId();
-var wandAer = dev.tc4port.thaumcraft.api.wand.WandApi.view(player
+var aer = dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.AER;
+var wandAer = fr.wind_blade.isorropia.common.compat.VisCompat.wandView(player
         .getItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND))
-        .map(v -> v.visCentivis().getOrDefault(dev.tc4port.thaumcraft.api.aspect.VisChannel.AER, 0)).orElse(-1);
+        .map(v -> v.visCentivis().getOrDefault(aer, 0)).orElse(-1);
 sb.append("wandGained=").append(wandAer > 0);
 sb.append(" wandAer=").append(wandAer);
 sb.append(" using=").append(player.isUsingItem());

@@ -9,7 +9,7 @@ mc.execute(() -> {
             return;
         }
         var menu = screen.getMenu();
-        boolean ignisShownOff = !menu.enabled(dev.tc4port.thaumcraft.api.aspect.VisChannel.IGNIS);
+        boolean ignisShownOff = !menu.enabled(dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.IGNIS);
         // The aer icon is TH's first switch, sixteen pixels square at (11, 12) inside the panel.
         boolean clicked = screen.mouseClicked(screen.getGuiLeft() + 19, screen.getGuiTop() + 20, 0);
         result.complete("screen=VisDynamoScreen ignisShownOff=" + ignisShownOff + " clicked=" + clicked);

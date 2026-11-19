@@ -50,7 +50,7 @@ pig.setNoAi(true);
 pig.setHealth(pig.getMaxHealth()); // a whole pig takes ten seconds: long enough to photograph the beam
 level.addFreshEntity(pig);
 sb.append(" pig=").append(pig.getId()).append(" hp=").append(pig.getHealth());
-var view = dev.tc4port.thaumcraft.api.wand.WandApi.view(player.getMainHandItem()).orElseThrow();
+var view = fr.wind_blade.isorropia.common.compat.VisCompat.wandView(player.getMainHandItem()).orElseThrow();
 sb.append(" focus=").append(view.installedFocus().map(f -> f.focusId().toString()).orElse("none"))
   .append(" vis=").append(view.visCentivis());
 

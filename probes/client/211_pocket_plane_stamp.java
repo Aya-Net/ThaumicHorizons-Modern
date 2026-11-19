@@ -10,7 +10,7 @@ if (pocket == null) {
     return "no_pocket_level\n";
 }
 
-var aer = dev.tc4port.thaumcraft.api.aspect.VisChannel.AER.aspectId();
+var aer = dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.AER;
 var tenebrae = dev.tc4port.thaumcraft.api.aspect.AspectId.parse("thaumcraft:tenebrae");
 var aspects = new java.util.LinkedHashMap<dev.tc4port.thaumcraft.api.aspect.AspectId, Integer>();
 aspects.put(aer, 43);

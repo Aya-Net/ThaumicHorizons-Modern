@@ -25,8 +25,8 @@ player.getInventory().clearContent();
 var wand = dev.tc4port.thaumcraft.api.wand.WandApi.createFullyCharged(
         dev.tc4port.thaumcraft.api.wand.WandMaterialId.WOOD, dev.tc4port.thaumcraft.api.wand.WandMaterialId.IRON);
 player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, wand);
-sb.append(" wand=").append(dev.tc4port.thaumcraft.api.wand.WandApi.view(wand)
-        .map(v -> String.valueOf(v.visCentivis().get(dev.tc4port.thaumcraft.api.aspect.VisChannel.AER))).orElse("-"));
+sb.append(" wand=").append(fr.wind_blade.isorropia.common.compat.VisCompat.wandView(wand)
+        .map(v -> String.valueOf(v.visCentivis().get(dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.AER))).orElse("-"));
 
 double x = 100.5, y = 310.0, z = 100.5;
 for (int dx = -3; dx <= 3; dx++) for (int dz = -3; dz <= 7; dz++) {

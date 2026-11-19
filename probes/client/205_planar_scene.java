@@ -15,9 +15,9 @@ for (int dx = -4; dx <= 18; dx++) {
     }
 }
 
-var aer = dev.tc4port.thaumcraft.api.aspect.VisChannel.AER.aspectId();
-var ordo = dev.tc4port.thaumcraft.api.aspect.VisChannel.ORDO.aspectId();
-var ignis = dev.tc4port.thaumcraft.api.aspect.VisChannel.IGNIS.aspectId();
+var aer = dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.AER;
+var ordo = dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.ORDO;
+var ignis = dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.IGNIS;
 
 // --- 1. Teleological recombinator over a node ---
 var recNode = origin;

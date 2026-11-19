@@ -4,5 +4,5 @@ var level = mc.getSingleplayerServer().overworld();
 var pos = new net.minecraft.core.BlockPos(200, 311, 103);
 var shard = (fr.wind_blade.isorropia.common.tiles.TileEtherealShard) level.getBlockEntity(pos);
 boolean waiting = shard.resolveDrainer(level) != null;
-shard.addToStore(dev.tc4port.thaumcraft.api.aspect.VisChannel.AER.aspectId(), 3);
+shard.addToStore(dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.AER, 3);
 return "waiting=" + waiting + " delayedFill=3";

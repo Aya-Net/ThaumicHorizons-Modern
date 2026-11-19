@@ -1,14 +1,15 @@
 package fr.wind_blade.isorropia.common.compat;
 
+import dev.tc4port.thaumcraft.api.aspect.BuiltinAspects;
+import dev.tc4port.thaumcraft.api.aspect.AspectId;
 import dev.tc4port.thaumcraft.api.ThaumcraftApiHelper;
 import dev.tc4port.thaumcraft.api.aspect.VisAction;
-import dev.tc4port.thaumcraft.api.aspect.VisChannel;
 import dev.tc4port.thaumcraft.api.focus.action.FocusTargetKind;
 import dev.tc4port.thaumcraft.api.focus.behavior.FocusUseContext;
 import dev.tc4port.thaumcraft.api.focus.behavior.FocusUseResult;
 import dev.tc4port.thaumcraft.api.research.ResearchApi;
 import dev.tc4port.thaumcraft.api.research.ResearchKey;
-import dev.tc4port.thaumcraft.api.wand.WandApi;
+import dev.tc4port.thaumcraft.api.wand.WandVis;
 import dev.tc4port.thaumcraft.api.wand.interaction.WandFormationApi;
 import dev.tc4port.thaumcraft.api.wand.pipeline.WandContinuation;
 import dev.tc4port.thaumcraft.api.wand.pipeline.WandPipelineApi;
@@ -33,8 +34,8 @@ import net.minecraft.world.phys.HitResult;
 /** Immediate local admission; structure conversion and capture remain server operations. */
 public final class WandInteractions {
     private static final ResearchKey CURATIVE_VAT = ResearchKey.of(Isorropia.MODID, "curativevat");
-    private static final Map<VisChannel, Integer> VAT_COST = Map.of(
-            VisChannel.AQUA, 50, VisChannel.TERRA, 50, VisChannel.ORDO, 50);
+    private static final Map<AspectId, Integer> VAT_COST = Map.of(
+            BuiltinAspects.AQUA, 50, BuiltinAspects.TERRA, 50, BuiltinAspects.ORDO, 50);
 
     private WandInteractions() { }
 
@@ -49,7 +50,7 @@ public final class WandInteractions {
     private static FocusUseResult machine(FocusUseContext use,
             WandContinuation<FocusUseContext, FocusUseResult> next) {
         if (use.target() != FocusTargetKind.BLOCK || !(use.hit() instanceof BlockHitResult hit)
-                || hit.getType() != HitResult.Type.BLOCK || WandApi.view(use.carrier()).isEmpty()) return next.proceed(use);
+                || hit.getType() != HitResult.Type.BLOCK || VisCompat.wandView(use.carrier()).isEmpty()) return next.proceed(use);
         Level level = use.player().level();
         var state = level.getBlockState(hit.getBlockPos());
         var block = state.getBlock();
@@ -73,14 +74,14 @@ public final class WandInteractions {
             WandContinuation<FocusUseContext, FocusUseResult> next) {
         if (use.hand() != InteractionHand.MAIN_HAND || use.target() != FocusTargetKind.BLOCK
                 || !(use.hit() instanceof BlockHitResult hit) || hit.getType() != HitResult.Type.BLOCK
-                || WandApi.view(use.carrier()).isEmpty() || !ResearchApi.isComplete(use.player(), CURATIVE_VAT)) {
+                || VisCompat.wandView(use.carrier()).isEmpty() || !ResearchApi.isComplete(use.player(), CURATIVE_VAT)) {
             return next.proceed(use);
         }
         Level level = use.player().level();
         if (VatStructure.isVatBlock(level.getBlockState(hit.getBlockPos()))) return next.proceed(use);
         BlockPos master = VatStructure.findUnformed(level, hit.getBlockPos()).orElse(null);
         if (master == null) return next.proceed(use);
-        var cost = WandApi.craftingCost(use.carrier(), use.player(), VAT_COST);
+        var cost = WandVis.craftingCost(use.carrier(), use.player(), VAT_COST);
         if (use.isClientSide()) {
             return ThaumcraftApiHelper.consumeExactVisFromWand(use.carrier(), use.player(), cost,
                     VisAction.SIMULATE).affordable()
@@ -102,7 +103,7 @@ public final class WandInteractions {
                 || target instanceof Player || !target.isAlive() || target.isRemoved()
                 || target.level() != use.player().level()
                 || use.player().level().getEntity(target.getId()) != target
-                || !use.player().level().isLoaded(target.blockPosition()) || WandApi.view(use.carrier()).isEmpty()) {
+                || !use.player().level().isLoaded(target.blockPosition()) || VisCompat.wandView(use.carrier()).isEmpty()) {
             return next.proceed(use);
         }
         LivingData data = LivingData.get(target).orElse(null);

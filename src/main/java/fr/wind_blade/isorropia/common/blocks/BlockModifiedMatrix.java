@@ -1,8 +1,8 @@
 package fr.wind_blade.isorropia.common.blocks;
 
-import dev.tc4port.thaumcraft.api.wand.WandApi;
 import fr.wind_blade.isorropia.common.tiles.TileModifiedMatrix;
 import fr.wind_blade.isorropia.common.tiles.TileVat;
+import fr.wind_blade.isorropia.common.compat.VisCompat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -68,7 +68,7 @@ public class BlockModifiedMatrix extends Block implements EntityBlock {
     /** Shared admission for the native callback and the item-first wand pipeline. */
     public InteractionResult useWand(BlockState state, Level level, BlockPos pos, Player player,
             InteractionHand hand, BlockHitResult hit, boolean client) {
-        if (hand != InteractionHand.MAIN_HAND || !WandApi.view(player.getItemInHand(hand)).isPresent()) {
+        if (hand != InteractionHand.MAIN_HAND || !VisCompat.wandView(player.getItemInHand(hand)).isPresent()) {
             return InteractionResult.PASS;
         }
         if (level.getBlockEntity(pos) instanceof TileModifiedMatrix matrix) {

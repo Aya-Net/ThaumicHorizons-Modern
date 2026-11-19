@@ -1,23 +1,23 @@
 {
-  "coordinate": "dev.tc4port:thaumcraft-forge:0.1.0-20762",
-  "runtime_version": "4.2.3.5-1.20.1-port.0.1.0-20762",
-  "source": "TC4R public infusion_pedestals and essentia_jars tags (thaumcraft-4-reconstructed PRs #434 and #435; source 37b2bc43f37f2e45fdbb584be761fea53745223b)",
+  "coordinate": "dev.tc4port:thaumcraft-forge:0.1.0-20776",
+  "runtime_version": "4.2.3.5-1.20.1-port.0.1.0-20776",
+  "source": "TC4R native Vis capabilities (thaumcraft-4-reconstructed PR #437; source afd7501ea95038e8de78d36309af3f26be9dacfc; build 20261119T132753Z-283e1d)",
   "artifacts": [
     {
-      "path": "dev/tc4port/thaumcraft-forge/0.1.0-20762/thaumcraft-forge-0.1.0-20762-api.jar",
-      "sha256": "f6acab11f8fdd2551f14fe861490948023789b00bb294da140d5f5f2bf48142d"
+      "path": "dev/tc4port/thaumcraft-forge/0.1.0-20776/thaumcraft-forge-0.1.0-20776-api.jar",
+      "sha256": "8c89ad22d26242558b3e40c966885a1698e613f45dc66a16b9e78e4c81f82392"
     },
     {
-      "path": "dev/tc4port/thaumcraft-forge/0.1.0-20762/thaumcraft-forge-0.1.0-20762-sources.jar",
-      "sha256": "3e8c0bfd843f1eced141a082c3d7355cbc84af96de1d90da729a7b5884e1aa60"
+      "path": "dev/tc4port/thaumcraft-forge/0.1.0-20776/thaumcraft-forge-0.1.0-20776-sources.jar",
+      "sha256": "76c187ae275548d2088c91ca11f8c3a4dbdd636e88f849f6cc69621658189008"
     },
     {
-      "path": "dev/tc4port/thaumcraft-forge/0.1.0-20762/thaumcraft-forge-0.1.0-20762.jar",
-      "sha256": "63cc6c092add579ae05726cc6789f19cbdf7724a748e7304be2fd36e1e955108"
+      "path": "dev/tc4port/thaumcraft-forge/0.1.0-20776/thaumcraft-forge-0.1.0-20776.jar",
+      "sha256": "3e5aee2601fc60a19c218f186f227986de1d879e2dd7602852798754d9c15c7d"
     },
     {
-      "path": "dev/tc4port/thaumcraft-forge/0.1.0-20762/thaumcraft-forge-0.1.0-20762.pom",
-      "sha256": "23fc961edb8a28b64e840faa08f840eac7e52e66e4a1244fee422fb459f06182"
+      "path": "dev/tc4port/thaumcraft-forge/0.1.0-20776/thaumcraft-forge-0.1.0-20776.pom",
+      "sha256": "327383d150c23c2349a77461f292096227094338a0773a188252102e3e263345"
     }
   ]
 }

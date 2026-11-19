@@ -1,10 +1,10 @@
 package fr.wind_blade.isorropia.common.blocks;
 
-import dev.tc4port.thaumcraft.api.wand.WandApi;
 import fr.wind_blade.isorropia.common.infusion.SoulJar;
 import fr.wind_blade.isorropia.common.items.ItemsIS;
 import fr.wind_blade.isorropia.common.tiles.TileJarSoul;
 import fr.wind_blade.isorropia.common.platform.StackData;
+import fr.wind_blade.isorropia.common.compat.VisCompat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -103,7 +103,7 @@ public class BlockJarSoul extends HorizontalDirectionalBlock implements EntityBl
     /** Shared admission for the native callback and the item-first wand pipeline. */
     public InteractionResult useWand(BlockState state, Level level, BlockPos pos, Player player,
             InteractionHand hand, BlockHitResult hit, boolean client) {
-        if (hand != InteractionHand.MAIN_HAND || WandApi.view(player.getItemInHand(hand)).isEmpty()) {
+        if (hand != InteractionHand.MAIN_HAND || VisCompat.wandView(player.getItemInHand(hand)).isEmpty()) {
             return InteractionResult.PASS;
         }
         if (!(level.getBlockEntity(pos) instanceof TileJarSoul jar) || jar.getEntityData() == null) {

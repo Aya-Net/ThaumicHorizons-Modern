@@ -15,10 +15,10 @@ for (int dx = -10; dx <= 10; dx++) {
 }
 level.setBlock(origin, fr.wind_blade.isorropia.common.blocks.BlocksIS.VORTEX.get().defaultBlockState(), 3);
 if (level.getBlockEntity(origin) instanceof fr.wind_blade.isorropia.common.tiles.TileVortex vortex) {
-    var aer = dev.tc4port.thaumcraft.api.aspect.VisChannel.AER.aspectId();
-    var ignis = dev.tc4port.thaumcraft.api.aspect.VisChannel.IGNIS.aspectId();
-    var aqua = dev.tc4port.thaumcraft.api.aspect.VisChannel.AQUA.aspectId();
-    var terra = dev.tc4port.thaumcraft.api.aspect.VisChannel.TERRA.aspectId();
+    var aer = dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.AER;
+    var ignis = dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.IGNIS;
+    var aqua = dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.AQUA;
+    var terra = dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.TERRA;
     vortex.setAspects(java.util.Map.of(aer, 40, ignis, 35, aqua, 25, terra, 20));
     var state = level.getBlockState(origin);
     for (int i = 0; i < 60; i++) {

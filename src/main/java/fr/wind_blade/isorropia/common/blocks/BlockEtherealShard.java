@@ -2,9 +2,9 @@ package fr.wind_blade.isorropia.common.blocks;
 
 import dev.tc4port.thaumcraft.api.ThaumcraftContent;
 import dev.tc4port.thaumcraft.api.aspect.AspectApi;
-import dev.tc4port.thaumcraft.api.wand.WandApi;
 import fr.wind_blade.isorropia.common.tiles.TileEtherealShard;
 import fr.wind_blade.isorropia.common.tiles.TilesIS;
+import fr.wind_blade.isorropia.common.compat.VisCompat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -72,7 +72,7 @@ public class BlockEtherealShard extends Block implements EntityBlock {
             return InteractionResult.PASS;
         }
         // Essence widens the shard; a wand draws from it. TH tested the essence first for the same reason.
-        if (!WandApi.view(held).isEmpty()) {
+        if (!VisCompat.wandView(held).isEmpty()) {
             /*
              * Both sides must enter the held use: the client's release is what ends the draw, and the
              * server-side player is what the tile reads back each tick.

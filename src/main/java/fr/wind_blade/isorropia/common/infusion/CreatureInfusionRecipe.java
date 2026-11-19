@@ -5,7 +5,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import dev.tc4port.thaumcraft.api.aspect.AspectId;
-import dev.tc4port.thaumcraft.api.aspect.VisChannel;
 import dev.tc4port.thaumcraft.api.research.ResearchKey;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -40,7 +39,7 @@ import java.util.function.Predicate;
  */
 public record CreatureInfusionRecipe(ResourceLocation id, Kind kind, @Nullable ResearchKey research,
         Predicate<LivingEntity> target, @Nullable EntityType<?> result, @Nullable Organ organ, List<Ingredient> components,
-        Map<AspectId, Integer> aspects, int instability, Map<VisChannel, Integer> vis, CelestialBody celestialBody,
+        Map<AspectId, Integer> aspects, int instability, Map<AspectId, Integer> vis, CelestialBody celestialBody,
         int celestialAura, int fluxRejection, List<Modifier> modifiers, @Nullable ResourceLocation hook) {
 
     public enum Kind {

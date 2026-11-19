@@ -1,9 +1,9 @@
 package fr.wind_blade.isorropia.client.gui;
 
+import dev.tc4port.thaumcraft.api.aspect.AspectId;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.tc4port.thaumcraft.api.aspect.AspectApi;
 import dev.tc4port.thaumcraft.api.aspect.AspectDefinition;
-import dev.tc4port.thaumcraft.api.aspect.VisChannel;
 import dev.tc4port.thaumcraft.api.client.EffectSequence;
 import dev.tc4port.thaumcraft.api.client.ThaumcraftClientRenderApi;
 import fr.wind_blade.isorropia.Isorropia;
@@ -64,12 +64,12 @@ public class VisDynamoScreen extends AbstractContainerScreen<VisDynamoMenu> {
     /** TH drew no captions over the dynamo's panel, only the six switches. */
     @Override
     protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
-        for (int i = 0; i < VisDynamoMenu.BUTTONS.length; i++) {
-            VisChannel channel = VisDynamoMenu.BUTTONS[i];
+        for (int i = 0; i < VisDynamoMenu.BUTTONS.size(); i++) {
+            AspectId channel = VisDynamoMenu.BUTTONS.get(i);
             if (this.menu.enabled(channel)) {
-                ThaumcraftClientRenderApi.drawAspect(graphics, channel.aspectId(), ICONS[i][0], ICONS[i][1], 1.0F);
+                ThaumcraftClientRenderApi.drawAspect(graphics, channel, ICONS[i][0], ICONS[i][1], 1.0F);
             } else {
-                drawMonochrome(graphics, AspectApi.get(channel.aspectId()), ICONS[i][0], ICONS[i][1]);
+                drawMonochrome(graphics, AspectApi.get(channel), ICONS[i][0], ICONS[i][1]);
             }
         }
         if (this.flashTimer > 0) {
@@ -130,7 +130,7 @@ public class VisDynamoScreen extends AbstractContainerScreen<VisDynamoMenu> {
             // TH's test was inclusive on both edges.
             if (x >= 0 && y >= 0 && x <= 16 && y <= 16 && this.minecraft != null && this.minecraft.gameMode != null) {
                 this.minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId, i);
-                AspectDefinition definition = AspectApi.get(VisDynamoMenu.BUTTONS[i].aspectId());
+                AspectDefinition definition = AspectApi.get(VisDynamoMenu.BUTTONS.get(i));
                 this.flashColour = definition == null ? 0xFFFFFF : definition.color();
                 this.flashTimer = FLASH_FRAMES;
                 this.flashX = (int) mouseX - this.leftPos - 8;

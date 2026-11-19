@@ -12,8 +12,8 @@ if (pocket == null) {
     return "no_pocket_level";
 }
 
-var terra = dev.tc4port.thaumcraft.api.aspect.VisChannel.TERRA.aspectId();
-var aer = dev.tc4port.thaumcraft.api.aspect.VisChannel.AER.aspectId();
+var terra = dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.TERRA;
+var aer = dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.AER;
 var aspects = new java.util.LinkedHashMap<dev.tc4port.thaumcraft.api.aspect.AspectId, Integer>();
 aspects.put(terra, 40);
 aspects.put(aer, 20);
@@ -66,7 +66,7 @@ sb.append("hasKeystone=").append(slot.hasKeystone()).append(" plane=").append(sl
 var wand = dev.tc4port.thaumcraft.api.wand.WandApi.createFullyCharged(
         dev.tc4port.thaumcraft.api.wand.WandMaterialId.parse("silverwood_staff"),
         dev.tc4port.thaumcraft.api.wand.WandMaterialId.parse("thaumium"));
-sb.append("wandVis=").append(dev.tc4port.thaumcraft.api.wand.WandApi.view(wand).orElseThrow().visCentivis())
+sb.append("wandVis=").append(fr.wind_blade.isorropia.common.compat.VisCompat.wandView(wand).orElseThrow().visCentivis())
         .append("\n");
 
 slot.makePortal(wand, player);

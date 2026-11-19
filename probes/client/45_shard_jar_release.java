@@ -13,7 +13,7 @@ for (var e : level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity
 if (!(level.getBlockEntity(shardPos) instanceof dev.tc4port.thaumcraft.block.entity.NodeJarBlockEntity jar)) {
     return "FAILED no jar at " + shardPos + " block=" + level.getBlockState(shardPos).getBlock();
 }
-var aer = dev.tc4port.thaumcraft.api.aspect.VisChannel.AER.aspectId();
+var aer = dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.AER;
 sb.append("before=").append(jar.nodeState().currentVis().amount(aer));
 dev.tc4port.thaumcraft.block.NodeJarBlock.releaseNode(level, shardPos, jar);
 sb.append(" block=").append(net.minecraft.core.registries.BuiltInRegistries.BLOCK.getKey(

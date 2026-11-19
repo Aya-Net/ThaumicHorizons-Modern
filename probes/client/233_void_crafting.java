@@ -33,8 +33,8 @@ try {
         return sb + "no_vortex_tile\n";
     }
     var aspects = new java.util.LinkedHashMap<dev.tc4port.thaumcraft.api.aspect.AspectId, Integer>();
-    aspects.put(dev.tc4port.thaumcraft.api.aspect.VisChannel.TERRA.aspectId(), 40);
-    aspects.put(dev.tc4port.thaumcraft.api.aspect.VisChannel.AER.aspectId(), 20);
+    aspects.put(dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.TERRA, 40);
+    aspects.put(dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.AER, 20);
     vortex.setAspects(aspects);
     vortex.setBeams(6);
     var vState = level.getBlockState(vPos);
@@ -73,11 +73,12 @@ try {
             putty += stack.getCount();
         }
         if (stack.is(dev.tc4port.thaumcraft.registry.TCItems.WAND.get())) {
-            var view = dev.tc4port.thaumcraft.api.wand.WandApi.view(stack);
+            var view = fr.wind_blade.isorropia.common.compat.VisCompat.wandView(stack);
             chargedWand = view.isPresent()
                     && fr.wind_blade.isorropia.common.wand.CrystalWandParts.ROD.equals(view.get().rod())
                     && fr.wind_blade.isorropia.common.wand.CrystalWandParts.CAP.equals(view.get().cap())
-                    && view.get().visCentivis().values().stream().allMatch(v -> v == 25000);
+                    && fr.wind_blade.isorropia.common.compat.VisCompat.PRIMALS.stream()
+                            .allMatch(aspect -> view.get().visCentivis().getOrDefault(aspect, 0) == 25000);
         }
     }
     sb.append("storedCount=").append(stored.size()).append(" putty=").append(putty)
