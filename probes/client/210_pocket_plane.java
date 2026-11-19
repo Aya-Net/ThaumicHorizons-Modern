@@ -28,7 +28,7 @@ sb.append("markerPersisted=").append(pocket.getBlockState(anchor)
 sb.append("exitPersisted=").append(pocket.getBlockState(fr.wind_blade.isorropia.common.world.PocketPlane.exit(0))
         .is(net.minecraft.world.level.block.Blocks.REDSTONE_BLOCK)).append("\n");
 
-var aer = dev.tc4port.thaumcraft.api.aspect.VisChannel.AER.aspectId();
+var aer = dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.AER;
 var store = fr.wind_blade.isorropia.common.world.PocketPlaneStore.get(server);
 int id = store.reserve("Probe Plane", java.util.Map.of(aer, 32), net.minecraft.world.level.Level.OVERWORLD, anchor, 64);
 sb.append("reservedId=").append(id).append("\n");

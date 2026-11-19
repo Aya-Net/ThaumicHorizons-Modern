@@ -69,7 +69,7 @@ if (level.getBlockEntity(nodePos) instanceof dev.tc4port.thaumcraft.block.entity
             dev.tc4port.thaumcraft.api.node.NodeTypeId.NORMAL,
             dev.tc4port.thaumcraft.api.node.NodeModifierId.NONE,
             new dev.tc4port.thaumcraft.api.node.NodeVis(java.util.Map.of(
-                    dev.tc4port.thaumcraft.api.aspect.VisChannel.AER.aspectId(), 128)),
+                    dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.AER, 128)),
             new dev.tc4port.thaumcraft.api.node.NodeVis(java.util.Map.of())));
 }
 sb.append(" shard=").append(shardPos).append(" relay=").append(relayPos).append(" node=").append(nodePos);
@@ -83,7 +83,7 @@ if (!(be instanceof fr.wind_blade.isorropia.common.tiles.TileEtherealShard shard
 // Three ethereal essence of aer, right-clicked through the block so the routing is covered too.
 var essence = dev.tc4port.thaumcraft.api.item.ThaumcraftItemApi.createWispEssence(
         dev.tc4port.thaumcraft.api.aspect.AspectAmounts.of(
-                dev.tc4port.thaumcraft.api.aspect.VisChannel.AER.aspectId(), 2));
+                dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.AER, 2));
 essence.setCount(3);
 player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, essence);
 var hit = new net.minecraft.world.phys.BlockHitResult(net.minecraft.world.phys.Vec3.atCenterOf(shardPos),
@@ -92,19 +92,19 @@ var used = fr.wind_blade.isorropia.common.blocks.BlocksIS.ETHEREAL_SHARD.get()
         .use(level.getBlockState(shardPos), level, shardPos, player,
                 net.minecraft.world.InteractionHand.MAIN_HAND, hit);
 sb.append(" use=").append(used);
-sb.append(" capacity=").append(shard.capacity(dev.tc4port.thaumcraft.api.aspect.VisChannel.AER.aspectId()));
+sb.append(" capacity=").append(shard.capacity(dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.AER));
 sb.append(" essenceLeft=").append(player.getItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND).getCount());
 
 // A little aer banked already, so the draw in 102 has something to take.
-shard.addToStore(dev.tc4port.thaumcraft.api.aspect.VisChannel.AER.aspectId(), 5);
-sb.append(" stored=").append(shard.stored(dev.tc4port.thaumcraft.api.aspect.VisChannel.AER.aspectId()));
+shard.addToStore(dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.AER, 5);
+sb.append(" stored=").append(shard.stored(dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.AER));
 
 var wand = dev.tc4port.thaumcraft.api.wand.WandApi.create(
         dev.tc4port.thaumcraft.api.wand.WandMaterialId.WOOD,
         dev.tc4port.thaumcraft.api.wand.WandMaterialId.IRON);
 player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, wand);
-sb.append(" wandAer=").append(dev.tc4port.thaumcraft.api.wand.WandApi.view(wand)
-        .map(v -> v.visCentivis().getOrDefault(dev.tc4port.thaumcraft.api.aspect.VisChannel.AER, 0)).orElse(-1));
+sb.append(" wandAer=").append(fr.wind_blade.isorropia.common.compat.VisCompat.wandView(wand)
+        .map(v -> v.visCentivis().getOrDefault(dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.AER, 0)).orElse(-1));
 
 player.teleportTo(level, x, y, z, 0.0F, 0.0F);
 return sb.toString();

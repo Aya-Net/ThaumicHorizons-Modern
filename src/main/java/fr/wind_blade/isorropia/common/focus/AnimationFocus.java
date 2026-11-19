@@ -1,8 +1,8 @@
 package fr.wind_blade.isorropia.common.focus;
 
 import dev.tc4port.thaumcraft.api.ThaumcraftContent;
+import dev.tc4port.thaumcraft.api.aspect.AspectId;
 import dev.tc4port.thaumcraft.api.aspect.VisAction;
-import dev.tc4port.thaumcraft.api.aspect.VisChannel;
 import dev.tc4port.thaumcraft.api.aspect.VisCost;
 import dev.tc4port.thaumcraft.api.event.GameplayHooks;
 import dev.tc4port.thaumcraft.api.focus.FocusApi;
@@ -30,6 +30,7 @@ import fr.wind_blade.isorropia.common.entities.AnimatedBlockType;
 import fr.wind_blade.isorropia.common.entities.EntitiesIS;
 import fr.wind_blade.isorropia.common.entities.EntityAnimatedBlock;
 import fr.wind_blade.isorropia.common.items.ItemFocusAnimation;
+import fr.wind_blade.isorropia.common.compat.VisCompat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -42,7 +43,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 
-import java.util.EnumMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -197,8 +198,8 @@ public final class AnimationFocus implements FocusActionHandler {
 
     /** The same number of centivis of every primal aspect, the golem's material setting how many. */
     private static VisCost primalCost(int amount) {
-        Map<VisChannel, Integer> amounts = new EnumMap<>(VisChannel.class);
-        for (VisChannel channel : VisChannel.values()) {
+        Map<AspectId, Integer> amounts = new LinkedHashMap<>();
+        for (AspectId channel : VisCompat.PRIMALS) {
             amounts.put(channel, amount);
         }
         return VisCost.ofCentivis(amounts);

@@ -6,7 +6,6 @@ import dev.tc4port.thaumcraft.api.aspect.AspectAmounts;
 import dev.tc4port.thaumcraft.api.aspect.AspectContainerView;
 import dev.tc4port.thaumcraft.api.aspect.AspectId;
 import dev.tc4port.thaumcraft.api.aspect.VisAction;
-import dev.tc4port.thaumcraft.api.aspect.VisChannel;
 import dev.tc4port.thaumcraft.api.essentia.EssentiaApi;
 import dev.tc4port.thaumcraft.api.essentia.EssentiaTransferMode;
 import dev.tc4port.thaumcraft.api.essentia.EssentiaTransport;
@@ -134,7 +133,7 @@ public class TileVat extends BlockEntity implements EssentiaTransport, AspectCon
     private final Map<AspectId, Integer> stored = new LinkedHashMap<>();
     private final Map<AspectId, Integer> needed = new LinkedHashMap<>();
     private final Map<AspectId, Integer> demanded = new LinkedHashMap<>();
-    private final Map<VisChannel, Integer> visNeeded = new LinkedHashMap<>();
+    private final Map<AspectId, Integer> visNeeded = new LinkedHashMap<>();
     private final Set<ResourceLocation> selfInfusions = new LinkedHashSet<>();
 
     @Nullable
@@ -540,7 +539,7 @@ public class TileVat extends BlockEntity implements EssentiaTransport, AspectCon
         if (visNeeded.isEmpty()) {
             return true;
         }
-        VisChannel channel = visNeeded.keySet().iterator().next();
+        AspectId channel = visNeeded.keySet().iterator().next();
         int whole = visNeeded.get(channel);
         int got = VisNetworkApi.drain(level, worldPosition.above(), channel, whole * 100, VisAction.EXECUTE) / 100;
         if (got <= 0) {

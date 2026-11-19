@@ -11,7 +11,7 @@ if (pocket == null) {
     return "no_pocket_level\n";
 }
 
-var terra = dev.tc4port.thaumcraft.api.aspect.VisChannel.TERRA.aspectId();
+var terra = dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.TERRA;
 var victus = dev.tc4port.thaumcraft.api.aspect.AspectId.parse("thaumcraft:victus");
 var vitium = dev.tc4port.thaumcraft.api.aspect.AspectId.parse("thaumcraft:vitium");
 var motus = dev.tc4port.thaumcraft.api.aspect.AspectId.parse("thaumcraft:motus");

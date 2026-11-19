@@ -17,3 +17,17 @@ The Maven version differs from the in-game mod version. The node's
 CI receives both Maven trees as one `.tar.gz` whose root holds this directory's
 contents, served through the `TC4R_ARCHIVE_URL` repository variable and
 `TC4R_ARCHIVE_TOKEN` secret; see `.github/actions/forge-setup`.
+
+For TC4R 20776, use the runtime, API and sources JARs from build
+`20261119T132753Z-283e1d` and rename them to the paths in the manifests.
+Use the following POM with a final newline, replacing `LOADER` with `forge`
+or `neoforge`.
+
+```xml
+<project xmlns="http://maven.apache.org/POM/4.0.0">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>dev.tc4port</groupId>
+  <artifactId>thaumcraft-LOADER</artifactId>
+  <version>0.1.0-20776</version>
+</project>
+```

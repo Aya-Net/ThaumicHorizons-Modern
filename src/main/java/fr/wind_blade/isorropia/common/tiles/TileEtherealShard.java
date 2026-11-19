@@ -6,7 +6,6 @@ import dev.tc4port.thaumcraft.api.aspect.AspectAmounts;
 import dev.tc4port.thaumcraft.api.aspect.AspectDefinition;
 import dev.tc4port.thaumcraft.api.aspect.AspectId;
 import dev.tc4port.thaumcraft.api.aspect.VisAction;
-import dev.tc4port.thaumcraft.api.aspect.VisChannel;
 import dev.tc4port.thaumcraft.api.aspect.VisCost;
 import dev.tc4port.thaumcraft.api.item.ThaumcraftItemApi;
 import dev.tc4port.thaumcraft.api.node.AuraNodeState;
@@ -17,10 +16,12 @@ import dev.tc4port.thaumcraft.api.node.NodeVis;
 import dev.tc4port.thaumcraft.api.node.VisNetworkApi;
 import dev.tc4port.thaumcraft.api.research.ResearchApi;
 import dev.tc4port.thaumcraft.api.research.ResearchKey;
-import dev.tc4port.thaumcraft.api.wand.VisTransferResult;
-import dev.tc4port.thaumcraft.api.wand.WandApi;
 import dev.tc4port.thaumcraft.api.wand.WandMaterialId;
+import dev.tc4port.thaumcraft.api.vis.VisAccess;
+import dev.tc4port.thaumcraft.api.vis.VisChangeRequest;
 import dev.tc4port.thaumcraft.api.wand.WandView;
+import dev.tc4port.thaumcraft.api.wand.pipeline.WandVisStages;
+import fr.wind_blade.isorropia.common.compat.VisCompat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -44,7 +45,6 @@ import net.minecraft.world.phys.Vec3;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.EnumSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -223,41 +223,19 @@ public class TileEtherealShard extends BlockEntity implements AuraNodeView {
     }
 
     private int draw(ServerLevel server, AspectId aspect) {
-        Optional<VisChannel> channel = VisChannel.fromAspectId(aspect);
-        if (channel.isPresent()) {
-            return VisNetworkApi.drain(server, this.worldPosition, channel.get(), DRAW_PER_TICK, VisAction.EXECUTE);
+        if (VisCompat.PRIMALS.contains(aspect)) {
+            return VisNetworkApi.drain(server, this.worldPosition, aspect, DRAW_PER_TICK, VisAction.EXECUTE);
         }
-        Set<VisChannel> primals = primalsOf(aspect);
+        Set<AspectId> primals = VisCompat.primalComponents(aspect);
         if (primals.isEmpty()) {
             return 0;
         }
         int least = DRAW_PER_TICK;
-        for (VisChannel primal : primals) {
+        for (AspectId primal : primals) {
             least = Math.min(least, VisNetworkApi.drain(server, this.worldPosition, primal, DRAW_PER_TICK,
                     VisAction.EXECUTE));
         }
         return least;
-    }
-
-    /** Every primal channel a compound aspect is ultimately built from. */
-    private static Set<VisChannel> primalsOf(AspectId aspect) {
-        Set<VisChannel> primals = EnumSet.noneOf(VisChannel.class);
-        collectPrimals(aspect, primals);
-        return primals;
-    }
-
-    private static void collectPrimals(AspectId aspect, Set<VisChannel> primals) {
-        AspectDefinition definition = AspectApi.get(aspect);
-        if (definition == null) {
-            return;
-        }
-        if (definition.primal()) {
-            definition.visChannel().ifPresent(primals::add);
-            return;
-        }
-        for (AspectId component : definition.components()) {
-            collectPrimals(component, primals);
-        }
     }
 
     // -- drawing back out with a wand --------------------------------------------------------------------------
@@ -268,8 +246,9 @@ public class TileEtherealShard extends BlockEntity implements AuraNodeView {
      * node, since TH's shard was one.
      */
     public boolean tapIntoWand(ServerPlayer player, ItemStack wand) {
-        WandView view = WandApi.view(wand).orElse(null);
-        if (view == null) {
+        WandView view = VisCompat.wandView(wand).orElse(null);
+        var storage = VisCompat.wandStorage(wand).orElse(null);
+        if (view == null || storage == null) {
             return false;
         }
         int tap = 1;
@@ -284,18 +263,19 @@ public class TileEtherealShard extends BlockEntity implements AuraNodeView {
                 && !view.rod().equals(WandMaterialId.WOOD)
                 && !view.cap().equals(WandMaterialId.IRON);
 
-        List<VisChannel> eligible = new ArrayList<>();
-        for (VisChannel channel : VisChannel.values()) {
-            if (stored(channel.aspectId()) > (preserve ? 1 : 0)
-                    && view.visCentivis().getOrDefault(channel, 0) < view.capacityCentivis().getOrDefault(channel, 0)) {
+        var balance = storage.snapshot();
+        List<AspectId> eligible = new ArrayList<>();
+        for (AspectId channel : VisCompat.PRIMALS) {
+            if (stored(channel) > (preserve ? 1 : 0)
+                    && balance.currentCentivis().getOrDefault(channel, 0) < balance.capacityCentivis().getOrDefault(channel, 0)) {
                 eligible.add(channel);
             }
         }
         if (eligible.isEmpty()) {
             return false;
         }
-        VisChannel channel = eligible.get(player.getRandom().nextInt(eligible.size()));
-        int available = stored(channel.aspectId());
+        AspectId channel = eligible.get(player.getRandom().nextInt(eligible.size()));
+        int available = stored(channel);
         int amount = Math.min(tap, available);
         if (preserve && amount == available) {
             amount--;
@@ -303,16 +283,17 @@ public class TileEtherealShard extends BlockEntity implements AuraNodeView {
         if (amount <= 0) {
             return false;
         }
-        VisTransferResult result = WandApi.insert(player, wand,
-                VisCost.ofCentivis(channel, amount * CENTIVIS_PER_VIS), VisAction.EXECUTE);
-        int added = result.transferred(channel);
+        var request = VisChangeRequest.insert(WandVisStages.INSERT,
+                VisCost.ofCentivis(channel, amount * CENTIVIS_PER_VIS));
+        var result = storage.change(VisAccess.of(player), request, VisAction.EXECUTE, true, false, plan -> true);
+        int added = result.executed() ? result.settled(channel) : 0;
         if (added <= 0) {
             return false;
         }
         int drained = Math.min(amount, Math.max(1, (added + CENTIVIS_PER_VIS - 1) / CENTIVIS_PER_VIS));
-        this.stored.put(channel.aspectId(), Math.max(0, available - drained));
+        this.stored.put(channel, Math.max(0, available - drained));
         this.drainPlayer = player.getUUID();
-        this.drainAspect = channel.aspectId();
+        this.drainAspect = channel;
         // A successful pull is refreshed every five use ticks; the short grace window masks packet jitter.
         this.drainUntil = player.level().getGameTime() + 7L;
         syncToClients();
@@ -334,7 +315,7 @@ public class TileEtherealShard extends BlockEntity implements AuraNodeView {
         }
         ServerPlayer player = server.getServer().getPlayerList().getPlayer(this.drainPlayer);
         if (player == null || player.level() != server || !player.isUsingItem()
-                || WandApi.view(player.getUseItem()).isEmpty()) {
+                || VisCompat.wandView(player.getUseItem()).isEmpty()) {
             return null;
         }
         Vec3 eye = player.getEyePosition();

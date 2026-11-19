@@ -38,8 +38,8 @@ for (int dx = -1; dx <= 3; dx++) {
     }
 }
 
-var ordo = dev.tc4port.thaumcraft.api.aspect.VisChannel.ORDO.aspectId();
-var ignis = dev.tc4port.thaumcraft.api.aspect.VisChannel.IGNIS.aspectId();
+var ordo = dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.ORDO;
+var ignis = dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.IGNIS;
 level.setBlock(receiverPos, dev.tc4port.thaumcraft.registry.TCBlocks.AURA_NODE.get().defaultBlockState(), 3);
 level.setBlock(donorPos, dev.tc4port.thaumcraft.registry.TCBlocks.AURA_NODE.get().defaultBlockState(), 3);
 if (!(level.getBlockEntity(receiverPos) instanceof dev.tc4port.thaumcraft.block.entity.AuraNodeBlockEntity receiver)

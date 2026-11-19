@@ -3,15 +3,14 @@ package fr.wind_blade.isorropia.common.tiles;
 import dev.tc4port.thaumcraft.api.ThaumcraftApiHelper;
 import dev.tc4port.thaumcraft.api.ThaumcraftContent;
 import dev.tc4port.thaumcraft.api.aspect.AspectApi;
-import dev.tc4port.thaumcraft.api.aspect.AspectDefinition;
 import dev.tc4port.thaumcraft.api.aspect.AspectId;
 import dev.tc4port.thaumcraft.api.aspect.VisAction;
-import dev.tc4port.thaumcraft.api.aspect.VisChannel;
 import dev.tc4port.thaumcraft.api.essentia.EssentiaApi;
 import dev.tc4port.thaumcraft.api.essentia.EssentiaTransferMode;
 import dev.tc4port.thaumcraft.api.essentia.EssentiaTransport;
 import dev.tc4port.thaumcraft.api.node.VisNetworkApi;
 import dev.tc4port.thaumcraft.api.node.VisSource;
+import fr.wind_blade.isorropia.common.compat.VisCompat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -26,9 +25,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nullable;
-import java.util.EnumMap;
-import java.util.EnumSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -53,7 +52,7 @@ public class TileEssentiaDynamo extends BlockEntity implements VisSource, Essent
     @Nullable
     private AspectId essentia;
     /** What the network may still take this tick. */
-    private final EnumMap<VisChannel, Integer> provided = new EnumMap<>(VisChannel.class);
+    private final Map<AspectId, Integer> provided = new LinkedHashMap<>();
     @Nullable
     private BlockPos registeredEndpoint;
 
@@ -105,7 +104,7 @@ public class TileEssentiaDynamo extends BlockEntity implements VisSource, Essent
         if (ticksProvided > 0) {
             provided.clear();
             if (essentia != null) {
-                Set<VisChannel> primals = primalsOf(essentia);
+                Set<AspectId> primals = primalsOf(essentia);
                 int each = primals.isEmpty() ? 0 : CENTIVIS_PER_TICK / primals.size();
                 primals.forEach(channel -> provided.put(channel, each));
             }
@@ -152,24 +151,8 @@ public class TileEssentiaDynamo extends BlockEntity implements VisSource, Essent
     }
 
     /** The primals an aspect is made of, followed down through its components as TH's reduceToPrimals did. */
-    public static Set<VisChannel> primalsOf(AspectId aspect) {
-        EnumSet<VisChannel> primals = EnumSet.noneOf(VisChannel.class);
-        collectPrimals(aspect, primals, 0);
-        return primals;
-    }
-
-    private static void collectPrimals(AspectId aspect, Set<VisChannel> primals, int depth) {
-        AspectDefinition definition = AspectApi.contains(aspect) ? AspectApi.get(aspect) : null;
-        if (definition == null || depth > 16) {
-            return;
-        }
-        if (definition.visChannel().isPresent()) {
-            primals.add(definition.visChannel().get());
-            return;
-        }
-        for (AspectId component : definition.components()) {
-            collectPrimals(component, primals, depth + 1);
-        }
+    public static Set<AspectId> primalsOf(AspectId aspect) {
+        return VisCompat.primalComponents(aspect);
     }
 
     private void showChanges() {
@@ -222,7 +205,7 @@ public class TileEssentiaDynamo extends BlockEntity implements VisSource, Essent
     }
 
     @Override
-    public int takeVis(VisChannel channel, int amount, VisAction action, int reservedCentivis) {
+    public int takeVis(AspectId channel, int amount, VisAction action, int reservedCentivis) {
         if (amount <= 0 || ticksProvided < 0) {
             return 0;
         }
@@ -425,7 +408,7 @@ public class TileEssentiaDynamo extends BlockEntity implements VisSource, Essent
     public long lastTrailTick = -1L;
 
     /** The centivis per tick this dynamo offers on a channel right now; for probes. */
-    public int providedCentivis(VisChannel channel) {
+    public int providedCentivis(AspectId channel) {
         return provided.getOrDefault(channel, 0);
     }
 

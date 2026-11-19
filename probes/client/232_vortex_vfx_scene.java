@@ -25,8 +25,8 @@ level.removeBlock(vPos, false);
 level.setBlock(vPos, fr.wind_blade.isorropia.common.blocks.BlocksIS.VORTEX.get().defaultBlockState(), 3);
 var vortex = (fr.wind_blade.isorropia.common.tiles.TileVortex) level.getBlockEntity(vPos);
 var aspects = new java.util.LinkedHashMap<dev.tc4port.thaumcraft.api.aspect.AspectId, Integer>();
-aspects.put(dev.tc4port.thaumcraft.api.aspect.VisChannel.TERRA.aspectId(), 40);
-aspects.put(dev.tc4port.thaumcraft.api.aspect.VisChannel.AER.aspectId(), 30);
+aspects.put(dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.TERRA, 40);
+aspects.put(dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.AER, 30);
 vortex.setAspects(aspects);
 sb.append("vortex=").append(vPos).append(" count=").append(vortex.count()).append(" beams=")
         .append(vortex.beams()).append(" player=").append(player.blockPosition()).append("\n");

@@ -41,7 +41,7 @@ for (int dy = 0; dy <= 2; dy++) {
 }
 player.teleportTo(level, x, y, z, 0.0F, 0.0F);
 
-var view = dev.tc4port.thaumcraft.api.wand.WandApi.view(player.getMainHandItem()).orElseThrow();
+var view = fr.wind_blade.isorropia.common.compat.VisCompat.wandView(player.getMainHandItem()).orElseThrow();
 sb.append(" focus=").append(view.installedFocus().map(f -> f.focusId().toString()).orElse("none"))
   .append(" vis=").append(view.visCentivis());
 sb.append(" target=").append((int) Math.floor(x)).append(",").append((int) y).append(",")

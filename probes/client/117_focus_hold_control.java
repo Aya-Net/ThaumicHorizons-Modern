@@ -24,9 +24,9 @@ player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, wand);
 var installed = dev.tc4port.thaumcraft.api.focus.FocusApi.install(player, net.minecraft.world.InteractionHand.MAIN_HAND,
         new net.minecraft.world.item.ItemStack(dev.tc4port.thaumcraft.api.ThaumcraftContent.item("focus_fire")),
         dev.tc4port.thaumcraft.api.aspect.VisAction.EXECUTE);
-var vis = dev.tc4port.thaumcraft.api.wand.WandApi.view(player.getMainHandItem()).orElseThrow().visCentivis();
-var ignis = dev.tc4port.thaumcraft.api.aspect.VisChannel.IGNIS;
-var aer = dev.tc4port.thaumcraft.api.aspect.VisChannel.AER;
+var vis = fr.wind_blade.isorropia.common.compat.VisCompat.wandView(player.getMainHandItem()).orElseThrow().visCentivis();
+var ignis = dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.IGNIS;
+var aer = dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.AER;
 System.getProperties().put("isorropia.focusHold", vis.get(aer) + "," + vis.get(ignis));
 player.connection.teleport(140.5, 310.0, 100.5, 0.0F, -80.0F);
 level.getChunkSource().move(player);

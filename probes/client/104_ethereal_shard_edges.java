@@ -7,8 +7,8 @@ mc.execute(() -> net.minecraft.client.KeyMapping.set(mc.options.keyUse.getKey(),
 player.stopUsingItem();
 var pos = new net.minecraft.core.BlockPos(204, 311, 103);
 var block = fr.wind_blade.isorropia.common.blocks.BlocksIS.ETHEREAL_SHARD.get();
-var aer = dev.tc4port.thaumcraft.api.aspect.VisChannel.AER.aspectId();
-var fire = dev.tc4port.thaumcraft.api.aspect.VisChannel.IGNIS.aspectId();
+var aer = dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.AER;
+var fire = dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.IGNIS;
 var box = new net.minecraft.world.phys.AABB(pos).inflate(3);
 level.removeBlock(pos, false);
 for (var item : level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, box)) item.discard();

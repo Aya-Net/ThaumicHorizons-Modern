@@ -5,8 +5,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import dev.tc4port.thaumcraft.api.aspect.AspectId;
-import dev.tc4port.thaumcraft.api.aspect.VisChannel;
 import dev.tc4port.thaumcraft.api.research.ResearchKey;
+import fr.wind_blade.isorropia.common.compat.VisCompat;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -69,11 +69,15 @@ public final class InfusionJson {
     }
 
     /** Whole vis per primal channel, drained from the vis network at the vat's matrix. */
-    static Map<VisChannel, Integer> vis(JsonObject json) {
-        Map<VisChannel, Integer> result = new LinkedHashMap<>();
+    static Map<AspectId, Integer> vis(JsonObject json) {
+        Map<AspectId, Integer> result = new LinkedHashMap<>();
         JsonObject vis = GsonHelper.getAsJsonObject(json, "vis", new JsonObject());
         for (Map.Entry<String, JsonElement> entry : vis.entrySet()) {
-            result.put(VisChannel.valueOf(entry.getKey().toUpperCase(Locale.ROOT)), entry.getValue().getAsInt());
+            AspectId aspect = AspectId.parse(entry.getKey().toLowerCase(Locale.ROOT));
+            if (!VisCompat.PRIMALS.contains(aspect)) {
+                throw new JsonParseException("Unknown primal Vis aspect " + entry.getKey());
+            }
+            result.put(aspect, entry.getValue().getAsInt());
         }
         return Collections.unmodifiableMap(result);
     }

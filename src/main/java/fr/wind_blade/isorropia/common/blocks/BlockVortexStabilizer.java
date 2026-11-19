@@ -2,6 +2,7 @@ package fr.wind_blade.isorropia.common.blocks;
 
 import fr.wind_blade.isorropia.common.tiles.TileVortexStabilizer;
 import fr.wind_blade.isorropia.common.tiles.TilesIS;
+import fr.wind_blade.isorropia.common.compat.VisCompat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -75,7 +76,7 @@ public class BlockVortexStabilizer extends Block implements EntityBlock {
     /** Shared admission for the native callback and the item-first wand pipeline. */
     public InteractionResult useWand(BlockState state, Level level, BlockPos pos, Player player,
             InteractionHand hand, BlockHitResult hit, boolean client) {
-        if (dev.tc4port.thaumcraft.api.wand.WandApi.view(player.getItemInHand(hand)).isEmpty()) {
+        if (VisCompat.wandView(player.getItemInHand(hand)).isEmpty()) {
             //? if forge {
             return super.use(state, level, pos, player, hand, hit);
             //?} else {

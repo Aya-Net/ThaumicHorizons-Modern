@@ -4,11 +4,11 @@ import dev.tc4port.thaumcraft.api.aspect.AspectAmounts;
 import dev.tc4port.thaumcraft.api.aspect.AspectId;
 import dev.tc4port.thaumcraft.api.aspect.AspectItemView;
 import dev.tc4port.thaumcraft.api.aspect.VisAction;
-import dev.tc4port.thaumcraft.api.aspect.VisChannel;
 import dev.tc4port.thaumcraft.api.node.VisNetworkApi;
 import dev.tc4port.thaumcraft.api.recipe.ArcaneCraftingApi;
 import dev.tc4port.thaumcraft.api.recipe.ArcaneCraftingRecipe;
 import dev.tc4port.thaumcraft.api.research.ResearchApi;
+import fr.wind_blade.isorropia.common.compat.VisCompat;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -126,7 +126,7 @@ public class MorphicFingersMenu extends AbstractContainerMenu {
 
     /** The aspect a stack is a crystal of, or null for anything else. */
     @Nullable
-    private static VisChannel crystalChannel(ItemStack stack) {
+    private static AspectId crystalChannel(ItemStack stack) {
         if (!(stack.getItem() instanceof AspectItemView view)) {
             return null;
         }
@@ -135,7 +135,7 @@ public class MorphicFingersMenu extends AbstractContainerMenu {
             return null;
         }
         AspectId aspect = aspects.amounts().keySet().iterator().next();
-        return VisChannel.fromAspectId(aspect).orElse(null);
+        return VisCompat.PRIMALS.contains(aspect) ? aspect : null;
     }
 
     /** Re-reads the grid: an arcane recipe if one is known and payable, otherwise a plain crafting one. */
@@ -214,16 +214,16 @@ public class MorphicFingersMenu extends AbstractContainerMenu {
      */
     @Nullable
     private Payment payment(ArcaneCraftingRecipe recipe, VisAction action) {
-        Map<VisChannel, Integer> whole = recipe.vis(input());
+        Map<AspectId, Integer> whole = recipe.vis(input());
         if (whole.isEmpty()) {
             return new Payment(Map.of(), Map.of());
         }
         if (!(this.player.level() instanceof ServerLevel level)) {
             return null;
         }
-        Map<VisChannel, Integer> network = new java.util.EnumMap<>(VisChannel.class);
-        Map<VisChannel, Integer> crystals = new java.util.EnumMap<>(VisChannel.class);
-        for (Map.Entry<VisChannel, Integer> entry : whole.entrySet()) {
+        Map<AspectId, Integer> network = new java.util.LinkedHashMap<>();
+        Map<AspectId, Integer> crystals = new java.util.LinkedHashMap<>();
+        for (Map.Entry<AspectId, Integer> entry : whole.entrySet()) {
             int needed = entry.getValue() * 100;
             int drained = VisNetworkApi.drain(level, this.player.blockPosition(), entry.getKey(), needed, action);
             int shortfall = needed - drained;
@@ -241,10 +241,10 @@ public class MorphicFingersMenu extends AbstractContainerMenu {
     }
 
     /** The whole vis the crystal slots can offer for one channel. */
-    private int crystalVis(VisChannel channel) {
+    private int crystalVis(AspectId channel) {
         int total = 0;
         for (int i = 0; i < this.crystals.getContainerSize(); i++) {
-            if (crystalChannel(this.crystals.getItem(i)) == channel) {
+            if (channel.equals(crystalChannel(this.crystals.getItem(i)))) {
                 total += this.crystals.getItem(i).getCount() * CRYSTAL_VIS;
             }
         }
@@ -262,7 +262,7 @@ public class MorphicFingersMenu extends AbstractContainerMenu {
                 updateResult();
                 return;
             }
-            for (Map.Entry<VisChannel, Integer> entry : payment.crystals().entrySet()) {
+            for (Map.Entry<AspectId, Integer> entry : payment.crystals().entrySet()) {
                 spendCrystals(entry.getKey(), entry.getValue());
             }
             for (ItemStack remaining : arcane.getRemainingItems(input())) {
@@ -287,11 +287,11 @@ public class MorphicFingersMenu extends AbstractContainerMenu {
         updateResult();
     }
 
-    private void spendCrystals(VisChannel channel, int centivis) {
+    private void spendCrystals(AspectId channel, int centivis) {
         int left = centivis;
         for (int i = 0; i < this.crystals.getContainerSize() && left > 0; i++) {
             ItemStack crystal = this.crystals.getItem(i);
-            if (crystalChannel(crystal) == channel) {
+            if (channel.equals(crystalChannel(crystal))) {
                 int used = Math.min(crystal.getCount(), left / CRYSTAL_VIS);
                 this.crystals.removeItem(i, used);
                 left -= used * CRYSTAL_VIS;
@@ -313,7 +313,7 @@ public class MorphicFingersMenu extends AbstractContainerMenu {
             }
             slot.onQuickCraft(stack, original);
         } else if (index >= PLAYER_START) {
-            VisChannel channel = crystalChannel(stack);
+            AspectId channel = crystalChannel(stack);
             if (channel != null && this.moveItemStackTo(stack, CRYSTAL_START, PLAYER_START, false)) {
                 // Taken by a crystal slot.
             } else if (!this.moveItemStackTo(stack, GRID_START, CRYSTAL_START, false)
@@ -363,6 +363,6 @@ public class MorphicFingersMenu extends AbstractContainerMenu {
     }
 
     /** What the network and the crystals will each pay, in centivis. */
-    private record Payment(Map<VisChannel, Integer> network, Map<VisChannel, Integer> crystals) {
+    private record Payment(Map<AspectId, Integer> network, Map<AspectId, Integer> crystals) {
     }
 }

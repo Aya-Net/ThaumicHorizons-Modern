@@ -13,7 +13,7 @@ sb.append("itemId=").append(itemId).append("\n");
 sb.append("blockPresent=").append(fr.wind_blade.isorropia.common.blocks.BlocksIS.VORTEX.isPresent()).append("\n");
 sb.append("bePresent=").append(fr.wind_blade.isorropia.common.tiles.TilesIS.VORTEX.isPresent()).append("\n");
 
-var aer = dev.tc4port.thaumcraft.api.aspect.VisChannel.AER.aspectId();
+var aer = dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.AER;
 
 // --- four amplifiers collapse an energized node ---
 var nodePos = new net.minecraft.core.BlockPos(400, 300, 400);

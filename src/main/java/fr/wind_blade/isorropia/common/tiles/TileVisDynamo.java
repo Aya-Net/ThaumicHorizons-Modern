@@ -1,14 +1,16 @@
 package fr.wind_blade.isorropia.common.tiles;
 
 import dev.tc4port.thaumcraft.api.ThaumcraftContent;
+import dev.tc4port.thaumcraft.api.aspect.AspectId;
 import dev.tc4port.thaumcraft.api.aspect.AspectApi;
 import dev.tc4port.thaumcraft.api.aspect.VisAction;
-import dev.tc4port.thaumcraft.api.aspect.VisChannel;
 import dev.tc4port.thaumcraft.api.aspect.VisCost;
 import dev.tc4port.thaumcraft.api.node.VisNetworkApi;
 import dev.tc4port.thaumcraft.api.node.VisSource;
-import dev.tc4port.thaumcraft.api.wand.VisTransferResult;
-import dev.tc4port.thaumcraft.api.wand.WandApi;
+import dev.tc4port.thaumcraft.api.vis.VisAccess;
+import dev.tc4port.thaumcraft.api.vis.VisChangeRequest;
+import dev.tc4port.thaumcraft.api.wand.pipeline.WandVisStages;
+import fr.wind_blade.isorropia.common.compat.VisCompat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -29,7 +31,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
-import java.util.EnumMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -54,11 +56,11 @@ public class TileVisDynamo extends BlockEntity implements VisSource, DynamoVisua
     /** How far the wizard may aim from the dynamo and still keep charging it. */
     private static final double REACH = 6.0D;
 
-    private final EnumMap<VisChannel, Boolean> enabled = new EnumMap<>(VisChannel.class);
+    private final Map<AspectId, Boolean> enabled = new LinkedHashMap<>();
     /** The offer one pulse left behind, refilled into {@link #provided} every supplying tick. */
-    private final EnumMap<VisChannel, Integer> offering = new EnumMap<>(VisChannel.class);
+    private final Map<AspectId, Integer> offering = new LinkedHashMap<>();
     /** Centivis the network may still take this tick. */
-    private final EnumMap<VisChannel, Integer> provided = new EnumMap<>(VisChannel.class);
+    private final Map<AspectId, Integer> provided = new LinkedHashMap<>();
 
     private int ticksProvided;
     private int pulseCooldown;
@@ -76,7 +78,7 @@ public class TileVisDynamo extends BlockEntity implements VisSource, DynamoVisua
 
     public TileVisDynamo(BlockPos pos, BlockState state) {
         super(TilesIS.VIS_DYNAMO.get(), pos, state);
-        for (VisChannel channel : VisChannel.values()) {
+        for (AspectId channel : VisCompat.PRIMALS) {
             this.enabled.put(channel, Boolean.TRUE);
         }
     }
@@ -108,10 +110,12 @@ public class TileVisDynamo extends BlockEntity implements VisSource, DynamoVisua
         }
     }
 
-    private static int channelMask(Map<VisChannel, Integer> offer) {
+    private static int channelMask(Map<AspectId, Integer> offer) {
         int mask = 0;
-        for (VisChannel channel : offer.keySet()) {
-            mask |= 1 << channel.index();
+        for (int i = 0; i < VisCompat.PRIMALS.size(); i++) {
+            if (offer.containsKey(VisCompat.PRIMALS.get(i))) {
+                mask |= 1 << i;
+            }
         }
         return mask;
     }
@@ -122,9 +126,9 @@ public class TileVisDynamo extends BlockEntity implements VisSource, DynamoVisua
         int green = 0;
         int blue = 0;
         int count = 0;
-        for (VisChannel channel : VisChannel.values()) {
-            if ((mask & 1 << channel.index()) != 0) {
-                int rgb = AspectApi.get(channel.aspectId()).color();
+        for (int i = 0; i < VisCompat.PRIMALS.size(); i++) {
+            if ((mask & 1 << i) != 0) {
+                int rgb = AspectApi.get(VisCompat.PRIMALS.get(i)).color();
                 red += rgb >> 16 & 255;
                 green += rgb >> 8 & 255;
                 blue += rgb & 255;
@@ -277,16 +281,18 @@ public class TileVisDynamo extends BlockEntity implements VisSource, DynamoVisua
     private boolean pulse(ServerPlayer player, ItemStack wand) {
         // TH replaced the offer outright each pulse, so a channel it could no longer pay for went quiet.
         offering.clear();
-        if (WandApi.view(wand).isEmpty()) {
+        var storage = VisCompat.wandStorage(wand).orElse(null);
+        if (storage == null || VisCompat.wandView(wand).isEmpty()) {
             return false;
         }
-        for (VisChannel channel : VisChannel.values()) {
+        var access = VisAccess.of(player);
+        for (AspectId channel : VisCompat.PRIMALS) {
             if (!enabled.getOrDefault(channel, Boolean.TRUE)) {
                 continue;
             }
-            VisTransferResult result = WandApi.extract(player, wand, VisCost.ofCentivis(channel, WAND_COST),
-                    VisAction.EXECUTE);
-            if (result.transferred(channel) >= WAND_COST) {
+            var request = VisChangeRequest.extract(WandVisStages.EXTRACT, VisCost.ofCentivis(channel, WAND_COST));
+            var result = storage.change(access, request, VisAction.EXECUTE, true, false, plan -> true);
+            if (result.executed() && result.settled(channel) >= WAND_COST) {
                 offering.put(channel, OFFERED);
             }
         }
@@ -300,7 +306,7 @@ public class TileVisDynamo extends BlockEntity implements VisSource, DynamoVisua
             return null;
         }
         ServerPlayer player = server.getServer().getPlayerList().getPlayer(chargingPlayer);
-        if (player == null || !player.isUsingItem() || WandApi.view(player.getUseItem()).isEmpty()) {
+        if (player == null || !player.isUsingItem() || VisCompat.wandView(player.getUseItem()).isEmpty()) {
             return null;
         }
         Vec3 eye = player.getEyePosition();
@@ -344,7 +350,7 @@ public class TileVisDynamo extends BlockEntity implements VisSource, DynamoVisua
     }
 
     @Override
-    public int takeVis(VisChannel channel, int amount, VisAction action, int reservedCentivis) {
+    public int takeVis(AspectId channel, int amount, VisAction action, int reservedCentivis) {
         if (amount <= 0 || ticksProvided <= 0) {
             return 0;
         }
@@ -386,15 +392,14 @@ public class TileVisDynamo extends BlockEntity implements VisSource, DynamoVisua
         if (chargingPlayer != null) {
             tag.putUUID("charger", chargingPlayer);
         }
-        int[] mask = new int[VisChannel.values().length];
-        for (Map.Entry<VisChannel, Boolean> entry : enabled.entrySet()) {
-            mask[entry.getKey().index()] = entry.getValue() ? 1 : 0;
+        int[] mask = new int[VisCompat.PRIMALS.size()];
+        int[] offer = new int[VisCompat.PRIMALS.size()];
+        for (int i = 0; i < VisCompat.PRIMALS.size(); i++) {
+            var channel = VisCompat.PRIMALS.get(i);
+            mask[i] = isEnabled(channel) ? 1 : 0;
+            offer[i] = offeredCentivis(channel);
         }
         tag.putIntArray("enabled", mask);
-        int[] offer = new int[VisChannel.values().length];
-        for (Map.Entry<VisChannel, Integer> entry : offering.entrySet()) {
-            offer[entry.getKey().index()] = entry.getValue();
-        }
         tag.putIntArray("offering", offer);
     }
 
@@ -414,18 +419,16 @@ public class TileVisDynamo extends BlockEntity implements VisSource, DynamoVisua
         chargingPlayer = tag.hasUUID("charger") ? tag.getUUID("charger") : null;
         if (tag.contains("enabled")) {
             int[] mask = tag.getIntArray("enabled");
-            for (VisChannel channel : VisChannel.values()) {
-                if (channel.index() < mask.length) {
-                    enabled.put(channel, mask[channel.index()] != 0);
-                }
+            for (int i = 0; i < Math.min(mask.length, VisCompat.PRIMALS.size()); i++) {
+                enabled.put(VisCompat.PRIMALS.get(i), mask[i] != 0);
             }
         }
         offering.clear();
         if (tag.contains("offering")) {
             int[] offer = tag.getIntArray("offering");
-            for (VisChannel channel : VisChannel.values()) {
-                if (channel.index() < offer.length && offer[channel.index()] > 0) {
-                    offering.put(channel, offer[channel.index()]);
+            for (int i = 0; i < Math.min(offer.length, VisCompat.PRIMALS.size()); i++) {
+                if (offer[i] > 0) {
+                    offering.put(VisCompat.PRIMALS.get(i), offer[i]);
                 }
             }
         }
@@ -434,18 +437,20 @@ public class TileVisDynamo extends BlockEntity implements VisSource, DynamoVisua
     }
 
     /** Reads the current per-channel offer; used by tests. */
-    public int offeredCentivis(VisChannel channel) {
+    public int offeredCentivis(AspectId channel) {
         return offering.getOrDefault(channel, 0);
     }
 
-    public boolean isEnabled(VisChannel channel) {
+    public boolean isEnabled(AspectId channel) {
         return enabled.getOrDefault(channel, Boolean.TRUE);
     }
 
     /** TH's {@code enchantItem}: one selection-screen button flips one primal. */
-    public void toggle(VisChannel channel) {
-        enabled.put(channel, !isEnabled(channel));
-        setChanged();
+    public void toggle(AspectId channel) {
+        if (VisCompat.PRIMALS.contains(channel)) {
+            enabled.put(channel, !isEnabled(channel));
+            setChanged();
+        }
     }
 
     /** The six switches as one bit mask, which the selection screen reads through a data slot. */
@@ -454,9 +459,9 @@ public class TileVisDynamo extends BlockEntity implements VisSource, DynamoVisua
             @Override
             public int get(int index) {
                 int mask = 0;
-                for (VisChannel channel : VisChannel.values()) {
-                    if (isEnabled(channel)) {
-                        mask |= 1 << channel.index();
+                for (int i = 0; i < VisCompat.PRIMALS.size(); i++) {
+                    if (isEnabled(VisCompat.PRIMALS.get(i))) {
+                        mask |= 1 << i;
                     }
                 }
                 return mask;
@@ -464,8 +469,8 @@ public class TileVisDynamo extends BlockEntity implements VisSource, DynamoVisua
 
             @Override
             public void set(int index, int value) {
-                for (VisChannel channel : VisChannel.values()) {
-                    enabled.put(channel, (value & 1 << channel.index()) != 0);
+                for (int i = 0; i < VisCompat.PRIMALS.size(); i++) {
+                    enabled.put(VisCompat.PRIMALS.get(i), (value & 1 << i) != 0);
                 }
                 setChanged();
             }

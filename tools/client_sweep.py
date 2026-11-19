@@ -88,8 +88,9 @@ STEPS = [
     ("86_vis_dynamo_check", ["supplying=true", "drain1=5"], 1),
     ("87_vis_dynamo_release", [], 3),
     ("88_vis_dynamo_release_check", ["supplying=false"], 1),
-    ("89_essentia_dynamo", ["filled=32", "dynamo=true", "victus=[TERRA, AQUA]",
-                            "humanus=[AER, TERRA, IGNIS, AQUA, ORDO, PERDITIO]"], 4),
+    ("89_essentia_dynamo", ["filled=32", "dynamo=true", "victus=[thaumcraft:terra, thaumcraft:aqua]",
+                            "humanus=[thaumcraft:aer, thaumcraft:terra, thaumcraft:ignis, "
+                            "thaumcraft:aqua, thaumcraft:ordo, thaumcraft:perditio]"], 4),
     ("90_essentia_dynamo_check", ["offered ignis=12", "aer=0", "drain1=12 drain2=0"], 1),
     ("91_node_monitor", ["set=true", "monitor=true survives=true"], 2),
     ("92_node_monitor_drain", ["healthy: powered=false signal=0", "drained=true"], 2),

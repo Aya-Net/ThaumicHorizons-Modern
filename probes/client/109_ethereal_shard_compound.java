@@ -6,8 +6,8 @@ var player = server.getPlayerList().getPlayer(mc.player.getUUID());
 player.stopUsingItem();
 mc.execute(() -> net.minecraft.client.KeyMapping.set(mc.options.keyUse.getKey(), false));
 var victus = dev.tc4port.thaumcraft.api.aspect.AspectId.parse("victus");
-var terra = dev.tc4port.thaumcraft.api.aspect.VisChannel.TERRA.aspectId();
-var aqua = dev.tc4port.thaumcraft.api.aspect.VisChannel.AQUA.aspectId();
+var terra = dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.TERRA;
+var aqua = dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.AQUA;
 for (int i = 0; i < 2; i++) {
     var pos = new net.minecraft.core.BlockPos(230 + i * 24, 311, 103);
     for (int dz = -1; dz <= 3; dz++) {

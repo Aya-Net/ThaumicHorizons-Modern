@@ -10,7 +10,7 @@ if (pocket == null) {
     return "no_pocket_level\n";
 }
 
-var terra = dev.tc4port.thaumcraft.api.aspect.VisChannel.TERRA.aspectId();
+var terra = dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.TERRA;
 var aspects = new java.util.LinkedHashMap<dev.tc4port.thaumcraft.api.aspect.AspectId, Integer>();
 aspects.put(terra, 20);
 aspects.put(dev.tc4port.thaumcraft.api.aspect.AspectId.parse("thaumcraft:vitium"), 10);

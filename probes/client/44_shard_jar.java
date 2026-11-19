@@ -32,7 +32,7 @@ level.setBlock(shardPos, fr.wind_blade.isorropia.common.blocks.BlocksIS.ETHEREAL
 if (!(level.getBlockEntity(shardPos) instanceof fr.wind_blade.isorropia.common.tiles.TileEtherealShard shard)) {
     return "FAILED no shard block entity";
 }
-var aer = dev.tc4port.thaumcraft.api.aspect.VisChannel.AER.aspectId();
+var aer = dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.AER;
 var essence = dev.tc4port.thaumcraft.api.item.ThaumcraftItemApi.createWispEssence(
         dev.tc4port.thaumcraft.api.aspect.AspectAmounts.of(aer, 2));
 essence.setCount(3);

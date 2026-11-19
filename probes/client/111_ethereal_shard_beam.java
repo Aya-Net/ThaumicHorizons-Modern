@@ -8,7 +8,7 @@ var block = fr.wind_blade.isorropia.common.blocks.BlocksIS.ETHEREAL_SHARD.get();
 level.removeBlock(pos, false);
 level.setBlock(pos, block.defaultBlockState(), 3);
 var shard = (fr.wind_blade.isorropia.common.tiles.TileEtherealShard) level.getBlockEntity(pos);
-var aer = dev.tc4port.thaumcraft.api.aspect.VisChannel.AER.aspectId();
+var aer = dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.AER;
 var essence = dev.tc4port.thaumcraft.api.item.ThaumcraftItemApi.createWispEssence(
         dev.tc4port.thaumcraft.api.aspect.AspectAmounts.of(aer, 2));
 essence.setCount(64);

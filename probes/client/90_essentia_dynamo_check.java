@@ -9,7 +9,7 @@ var sb = new StringBuilder();
 if (!(level.getBlockEntity(dynamoPos) instanceof fr.wind_blade.isorropia.common.tiles.TileEssentiaDynamo dynamo)) {
     return "no dynamo at " + dynamoPos;
 }
-var ignis = dev.tc4port.thaumcraft.api.aspect.VisChannel.IGNIS;
+var ignis = dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.IGNIS;
 // Between two units the dynamo has one tick with nothing left (TH's had it too); step over it so the drain is tested.
 if (dynamo.ticksProvided() == 0) {
     fr.wind_blade.isorropia.common.tiles.TileEssentiaDynamo.serverTick(level, dynamoPos, level.getBlockState(dynamoPos), dynamo);
@@ -17,7 +17,7 @@ if (dynamo.ticksProvided() == 0) {
 }
 sb.append("ticks=").append(dynamo.ticksProvided())
   .append(" offered ignis=").append(dynamo.providedCentivis(ignis))
-  .append(" aer=").append(dynamo.providedCentivis(dev.tc4port.thaumcraft.api.aspect.VisChannel.AER))
+  .append(" aer=").append(dynamo.providedCentivis(dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.AER))
   .append(" supplying=").append(dynamo.canSupplyVis())
   .append(" endpoint=").append(dynamo.networkEndpoint() == null ? "none" : dynamo.networkEndpoint().toShortString());
 if (level.getBlockEntity(jarPos) instanceof dev.tc4port.thaumcraft.api.essentia.EssentiaTransport jar) {

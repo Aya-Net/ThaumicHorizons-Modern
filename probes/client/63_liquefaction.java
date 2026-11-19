@@ -43,7 +43,7 @@ for (var stale : level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEn
 level.setBlock(target, net.minecraft.world.level.block.Blocks.ICE.defaultBlockState(), 3);
 player.teleportTo(level, x, y, z, 0.0F, 0.0F);
 
-var view = dev.tc4port.thaumcraft.api.wand.WandApi.view(player.getMainHandItem()).orElseThrow();
+var view = fr.wind_blade.isorropia.common.compat.VisCompat.wandView(player.getMainHandItem()).orElseThrow();
 sb.append(" focus=").append(view.installedFocus().map(f -> f.focusId().toString()).orElse("none"))
   .append(" vis=").append(view.visCentivis());
 sb.append(" target=").append(target.getX()).append(",").append(target.getY()).append(",").append(target.getZ());

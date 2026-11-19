@@ -39,7 +39,7 @@ sb.append(" vis_supplying=").append(vis.canSupplyVis())
 fr.wind_blade.isorropia.common.tiles.TileVisDynamo.serverTick(level, visPos, level.getBlockState(visPos), vis);
 // A consumer standing on the dynamo: the graph finds the wireless source one block away.
 int drained = dev.tc4port.thaumcraft.api.node.VisNetworkApi.drain(level, visPos.above(),
-        dev.tc4port.thaumcraft.api.aspect.VisChannel.IGNIS, 3,
+        dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.IGNIS, 3,
         dev.tc4port.thaumcraft.api.aspect.VisAction.EXECUTE);
 sb.append(" vis_drained=").append(drained);
 
@@ -65,7 +65,7 @@ for (int i = 0; i < 40; i++) {
             level.getBlockState(edPos), ed);
 }
 sb.append(" ed_ticks=").append(ed.ticksProvided())
-  .append(" ed_provided=").append(ed.providedCentivis(dev.tc4port.thaumcraft.api.aspect.VisChannel.IGNIS))
+  .append(" ed_provided=").append(ed.providedCentivis(dev.tc4port.thaumcraft.api.aspect.BuiltinAspects.IGNIS))
   .append(" ed_supplying=").append(ed.canSupplyVis())
   .append(" ed_takenFromJar=").append(32 - (level.getBlockEntity(jarPos)
           instanceof dev.tc4port.thaumcraft.api.essentia.EssentiaTransport j ? j.essentiaAmount(net.minecraft.core.Direction.UP) : -1));

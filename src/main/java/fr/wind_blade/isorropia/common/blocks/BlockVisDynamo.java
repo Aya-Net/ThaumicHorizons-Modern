@@ -1,8 +1,8 @@
 package fr.wind_blade.isorropia.common.blocks;
 
-import dev.tc4port.thaumcraft.api.wand.WandApi;
 import fr.wind_blade.isorropia.common.menu.VisDynamoMenu;
 import fr.wind_blade.isorropia.common.tiles.TileVisDynamo;
+import fr.wind_blade.isorropia.common.compat.VisCompat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -79,7 +79,7 @@ public class BlockVisDynamo extends Block implements EntityBlock {
             return InteractionResult.PASS;
         }
         ItemStack held = player.getItemInHand(hand);
-        if (WandApi.view(held).isEmpty()) {
+        if (VisCompat.wandView(held).isEmpty()) {
             // TH opened the selection screen for anything but a wand.
             if (player instanceof ServerPlayer serverPlayer) {
                 Menus.open(serverPlayer, new SimpleMenuProvider(

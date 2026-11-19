@@ -1,8 +1,9 @@
 package fr.wind_blade.isorropia.common.menu;
 
-import dev.tc4port.thaumcraft.api.aspect.VisChannel;
+import dev.tc4port.thaumcraft.api.aspect.AspectId;
 import fr.wind_blade.isorropia.common.blocks.BlocksIS;
 import fr.wind_blade.isorropia.common.tiles.TileVisDynamo;
+import fr.wind_blade.isorropia.common.compat.VisCompat;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -13,6 +14,7 @@ import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * TH's {@code ContainerVisDynamo}: no slots, only the six primal switches. The screen's buttons arrive as
@@ -20,9 +22,7 @@ import javax.annotation.Nullable;
  */
 public class VisDynamoMenu extends AbstractContainerMenu {
     /** Button order, as TH numbered them from one: aer, terra, ignis, aqua, ordo, perditio. */
-    public static final VisChannel[] BUTTONS = {
-            VisChannel.AER, VisChannel.TERRA, VisChannel.IGNIS, VisChannel.AQUA, VisChannel.ORDO, VisChannel.PERDITIO
-    };
+    public static final List<AspectId> BUTTONS = VisCompat.PRIMALS;
 
     @Nullable
     private final TileVisDynamo dynamo;
@@ -47,17 +47,18 @@ public class VisDynamoMenu extends AbstractContainerMenu {
         addDataSlots(this.switches);
     }
 
-    public boolean enabled(VisChannel channel) {
-        return (this.switches.get(0) & 1 << channel.index()) != 0;
+    public boolean enabled(AspectId channel) {
+        int index = BUTTONS.indexOf(channel);
+        return index >= 0 && (this.switches.get(0) & 1 << index) != 0;
     }
 
     @Override
     public boolean clickMenuButton(Player player, int id) {
-        if (id < 0 || id >= BUTTONS.length) {
+        if (id < 0 || id >= BUTTONS.size()) {
             return false;
         }
         if (this.dynamo != null) {
-            this.dynamo.toggle(BUTTONS[id]);
+            this.dynamo.toggle(BUTTONS.get(id));
         }
         return true;
     }

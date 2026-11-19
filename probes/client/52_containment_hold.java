@@ -50,7 +50,7 @@ pig.setNoAi(true);
 pig.setHealth(4.0F); // 80 measure: about four seconds of beam
 level.addFreshEntity(pig);
 sb.append(" pig=").append(pig.getId()).append(" hp=").append(pig.getHealth());
-var view = dev.tc4port.thaumcraft.api.wand.WandApi.view(player.getMainHandItem()).orElseThrow();
+var view = fr.wind_blade.isorropia.common.compat.VisCompat.wandView(player.getMainHandItem()).orElseThrow();
 sb.append(" focus=").append(view.installedFocus().map(f -> f.focusId().toString()).orElse("none"))
   .append(" vis=").append(view.visCentivis());
 

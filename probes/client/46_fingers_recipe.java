@@ -22,9 +22,9 @@ for (int i = 0; i < 9; i++) {
     fingers.getSlot(1 + i).set(pattern[i].copy());
 }
 // Five whole vis of each primal, since the superflat world has no vis network to draw on.
-var channels = dev.tc4port.thaumcraft.api.aspect.VisChannel.values();
-for (int i = 0; i < channels.length; i++) {
-    var crystal = dev.tc4port.thaumcraft.api.item.ThaumcraftItemApi.createCrystalEssence(channels[i].aspectId());
+var channels = fr.wind_blade.isorropia.common.compat.VisCompat.PRIMALS;
+for (int i = 0; i < channels.size(); i++) {
+    var crystal = dev.tc4port.thaumcraft.api.item.ThaumcraftItemApi.createCrystalEssence(channels.get(i));
     crystal.setCount(5);
     fingers.getSlot(10 + i).set(crystal);
 }

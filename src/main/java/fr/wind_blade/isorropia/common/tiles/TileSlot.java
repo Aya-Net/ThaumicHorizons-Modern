@@ -1,8 +1,9 @@
 package fr.wind_blade.isorropia.common.tiles;
 
+import dev.tc4port.thaumcraft.api.aspect.BuiltinAspects;
+import dev.tc4port.thaumcraft.api.aspect.AspectId;
 import dev.tc4port.thaumcraft.api.ThaumcraftApiHelper;
 import dev.tc4port.thaumcraft.api.aspect.VisAction;
-import dev.tc4port.thaumcraft.api.aspect.VisChannel;
 import dev.tc4port.thaumcraft.api.aspect.VisConsumptionContext;
 import dev.tc4port.thaumcraft.api.aspect.VisCost;
 import dev.tc4port.thaumcraft.registry.TCBlocks;
@@ -41,9 +42,9 @@ import java.util.Map;
  */
 public class TileSlot extends BlockEntity {
     /** TH charged two hundred and fifty of each primal to cut a gateway. */
-    private static final Map<VisChannel, Integer> GATEWAY_COST = Map.of(
-            VisChannel.AER, 250, VisChannel.TERRA, 250, VisChannel.IGNIS, 250,
-            VisChannel.AQUA, 250, VisChannel.ORDO, 250, VisChannel.PERDITIO, 250);
+    private static final Map<AspectId, Integer> GATEWAY_COST = Map.of(
+            BuiltinAspects.AER, 250, BuiltinAspects.TERRA, 250, BuiltinAspects.IGNIS, 250,
+            BuiltinAspects.AQUA, 250, BuiltinAspects.ORDO, 250, BuiltinAspects.PERDITIO, 250);
 
     private boolean hasKeystone;
     private boolean portalOpen;
